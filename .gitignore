@@ -134,3 +134,81 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# ========================================
+# STM32 & Embedded Development
+# ========================================
+
+# Build directories
+build/
+Debug/
+Release/
+cmake_build/
+cmake-build-debug/
+cmake-build-release/
+
+# Compiled object files and executables
+*.o
+*.a
+*.lib
+*.elf
+*.hex
+*.bin
+*.out
+*.map
+*.d
+
+# IDE specific files - STM32CubeIDE
+.settings/
+.cproject
+.project
+RemoteSystemsTempFiles/
+*.launch
+
+# IDE specific files - IAR EWARM
+EWARM/Obj/
+EWARM/List/
+EWARM/*.ewt
+EWARM/*.ewi
+EWARM/*.dep
+
+# IDE specific files - Keil MDK-ARM
+Objects/
+Listings/
+MDK-ARM/*.scvd
+MDK-ARM/*.uvopt
+
+# GCC compiler artifacts
+*.su
+
+# TouchGFX specific
+TouchGFX/simulator/build/
+TouchGFX/generated/simulator/
+*.touchgfx~
+.touchgfx_backup/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Backup files
+*.bak
+*.orig
+backup_*/

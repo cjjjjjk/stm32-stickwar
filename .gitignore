@@ -212,3 +212,38 @@ Thumbs.db
 *.bak
 *.orig
 backup_*/
+
+# STM32CubeIDE build output
+/STM32CubeIDE/Debug/
+/STM32CubeIDE/Release/
+
+# TouchGFX simulator/build output
+/TouchGFX/build/
+
+# Generic build folders
+Debug/
+Release/
+build/
+
+# Build artifacts
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.su
+*.cyclo
+*.axf
+*.srec
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

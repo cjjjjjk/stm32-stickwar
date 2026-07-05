@@ -1,0 +1,36 @@
+name: STM32 Build Check
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build (arm-none-eabi-gcc)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ARM GCC toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi make
+          arm-none-eabi-gcc --version
+
+      - name: Mark touchgfx tool binaries as executable
+        run: |
+          chmod +x Middlewares/ST/touchgfx/framework/tools/imageconvert/build/linux/imageconvert.out || true
+          chmod +x Middlewares/ST/touchgfx/framework/tools/fontconvert/build/linux/fontconvert.out || true
+
+      - name: Build firmware
+        run: make -C gcc all
+        env:
+          # Suppress colour codes that clutter CI logs
+          MAKEFLAGS: "--no-print-directory"
+
+      - name: Show binary size
+        if: success()
+        run: arm-none-eabi-size TouchGFX/build/bin/target.elf || true

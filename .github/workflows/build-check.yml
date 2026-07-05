@@ -1,13 +1,14 @@
-name: STM32 Build Check
+name: Project Build Check
 
 on:
+  push:
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
   build:
-    name: Build (arm-none-eabi-gcc)
+    name: STM32 Build Check
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +41,6 @@ jobs:
       - name: Build firmware
         run: make -C gcc all
         env:
-          # Suppress colour codes that clutter CI logs
           MAKEFLAGS: "--no-print-directory"
 
       - name: Show binary size

@@ -242,7 +242,7 @@ Release/
 # Temporary files
 *.log
 *.tmp
-*.temp
+# *.temp
 
 # OS files
 .DS_Store

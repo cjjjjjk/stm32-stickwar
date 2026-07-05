@@ -18,6 +18,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
+          
+      - name: Install Ruby dependencies
+        run: gem install nokogiri
 
       - name: Install ARM GCC toolchain
         run: |

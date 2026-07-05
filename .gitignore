@@ -140,7 +140,7 @@ dist
 # ========================================
 
 # Build directories
-build/
+# build/
 Debug/
 Release/
 cmake_build/
@@ -192,6 +192,7 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+!gcc/Makefile
 
 # Python cache
 __pycache__/
@@ -223,7 +224,7 @@ backup_*/
 # Generic build folders
 Debug/
 Release/
-build/
+# build/
 
 # Build artifacts
 *.o

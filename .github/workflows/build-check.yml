@@ -20,6 +20,10 @@ jobs:
           sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi make
           arm-none-eabi-gcc --version
 
+      - name: Fix CRLF line endings in Makefiles
+        run: |
+          find . \( -name "Makefile" -o -name "*.mk" \) | xargs sed -i 's/\r$//'
+
       - name: Mark touchgfx tool binaries as executable
         run: |
           chmod +x Middlewares/ST/touchgfx/framework/tools/imageconvert/build/linux/imageconvert.out || true

@@ -10,6 +10,7 @@
 #include <touchgfx/widgets/Box.hpp>
 #include <gui/containers/StickManA.hpp>
 #include <gui/containers/StickManB.hpp>
+#include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 
 class Screen1ViewBase : public touchgfx::View<Screen1Presenter>
 {
@@ -34,6 +35,13 @@ protected:
     touchgfx::Box StaminaA;
     touchgfx::Box HealthB;
     touchgfx::Box StaminaB;
+    touchgfx::TextAreaWithOneWildcard countdownLabel;
+
+    /*
+     * Wildcard Buffers
+     */
+    static const uint16_t COUNTDOWNLABEL_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar countdownLabelBuffer[COUNTDOWNLABEL_SIZE];
 
 private:
 

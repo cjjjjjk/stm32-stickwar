@@ -60,6 +60,25 @@
             "Color": {
               "Green": 255
             }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "countdownLabel",
+            "X": 67,
+            "Y": 35,
+            "Width": 186,
+            "Height": 41,
+            "TextId": "__SingleUse_Q67O",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 183,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_ZSL3",
+              "UseBuffer": true,
+              "BufferSize": 10
+            }
           }
         ],
         "Interactions": [

@@ -1,4 +1,12 @@
 #include <gui/containers/StickManB.hpp>
+#include <touchgfx/Color.hpp>
+
+namespace
+{
+    const touchgfx::colortype PLAYER_B_BASE_COLOR = touchgfx::Color::getColorFromRGB(255, 0, 0);
+    const touchgfx::colortype HIT_FLASH_RED = touchgfx::Color::getColorFromRGB(255, 0, 0);
+    const touchgfx::colortype HIT_FLASH_WHITE = touchgfx::Color::getColorFromRGB(255, 255, 255);
+}
 
 StickManB::StickManB()
 {
@@ -19,6 +27,7 @@ void StickManB::initialize()
     isJumping = false;
     jumpTimer = 0;
     isCrouching = false;
+    hitFlashTimer = 0;
 
     // Tọa độ gốc
     armOrigEndX = 35;  // Tay B đâm ngược về trái
@@ -109,6 +118,22 @@ void StickManB::tickProcess()
 {
     stateTimer++;
     if (cooldownTimer > 0) cooldownTimer--;
+
+    const bool hitFlashActive = hitFlashTimer > 0;
+    // nhấp nháy đỏ/trắng khi hitFlashActive = true
+    const touchgfx::colortype activeColor = hitFlashActive
+        ? ((hitFlashTimer % 2 == 0) ? HIT_FLASH_RED : HIT_FLASH_WHITE)
+        : PLAYER_B_BASE_COLOR;
+
+    HeadBPainter.setColor(activeColor);
+    BodyBPainter.setColor(activeColor);
+    Arm1BPainter.setColor(activeColor);
+    Arm2BPainter.setColor(activeColor);
+    Arm3BPainter.setColor(activeColor);
+    Leg1BPainter.setColor(activeColor);
+    Leg2BPainter.setColor(activeColor);
+    Leg3BPainter.setColor(activeColor);
+    Leg4BPainter.setColor(activeColor);
 
     // 1. QUẢN LÝ THỂ LỰC
     if (currentState == STATE_BLOCKING) {
@@ -271,10 +296,13 @@ void StickManB::tickProcess()
     Leg4B.invalidate();
     HeadB.invalidate();
     BodyB.invalidate();
+
+    if (hitFlashTimer > 0) hitFlashTimer--;
 }
 
 void StickManB::takeDamage(int dmg, bool causeStun)
 {
+    hitFlashTimer = 6;
     hp -= dmg;
     if (hp <= 0) {
         hp = 0;

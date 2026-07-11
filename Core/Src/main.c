@@ -1323,12 +1323,13 @@ void StartDefaultTask(void *argument)
     // ==========================================================
     // XỬ LÝ NÚT B1 (CHỌN CHẾ ĐỘ TRÒ CHƠI) - PC13
     // ==========================================================
+    uint32_t current_os_tick = osKernelGetTickCount();
     uint8_t curr_B1_State = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
     if (curr_B1_State != last_B1_State) {
         if (curr_B1_State == GPIO_PIN_SET) { // Giả sử nút nhấn tích cực mức CAO
-            press_time_B1 = current_time;
+            press_time_B1 = current_os_tick;
         } else {
-            uint32_t hold_time = current_time - press_time_B1;
+            uint32_t hold_time = current_os_tick - press_time_B1;
             if (hold_time > 20) { // Debounce tối thiểu 20ms
                 if (hold_time >= 1000) {
                     // Nhấn giữ (>= 1000ms): Xác nhận chế độ

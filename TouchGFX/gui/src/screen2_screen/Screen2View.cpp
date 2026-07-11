@@ -80,19 +80,21 @@ void Screen2View::handleTickEvent()
     else if (global_pendingMode != 0 && global_pendingMode != current_highlight_mode && global_pendingMode != 0xFF) {
         current_highlight_mode = global_pendingMode;
 
-        // Reset all buttons pressed state
-        pvp.setPressed(false);
-        pve_easy.setPressed(false);
-        pve_medium.setPressed(false);
-        pve_hard.setPressed(false);
+        // Sử dụng ClickEvent::CANCEL để nhả nút (không trigger action)
+        touchgfx::ClickEvent cancelEvent(touchgfx::ClickEvent::CANCEL, 0, 0);
+        pvp.handleClickEvent(cancelEvent);
+        pve_easy.handleClickEvent(cancelEvent);
+        pve_medium.handleClickEvent(cancelEvent);
+        pve_hard.handleClickEvent(cancelEvent);
 
-        // Highlight selected button
-        if (current_highlight_mode == 1) pvp.setPressed(true);
-        else if (current_highlight_mode == 2) pve_easy.setPressed(true);
-        else if (current_highlight_mode == 3) pve_medium.setPressed(true);
-        else if (current_highlight_mode == 4) pve_hard.setPressed(true);
+        // Sử dụng ClickEvent::PRESSED để ép nút vào trạng thái đang bấm (highlight)
+        touchgfx::ClickEvent pressEvent(touchgfx::ClickEvent::PRESSED, 0, 0);
+        if (current_highlight_mode == 1) pvp.handleClickEvent(pressEvent);
+        else if (current_highlight_mode == 2) pve_easy.handleClickEvent(pressEvent);
+        else if (current_highlight_mode == 3) pve_medium.handleClickEvent(pressEvent);
+        else if (current_highlight_mode == 4) pve_hard.handleClickEvent(pressEvent);
 
-        // Invalidate buttons to force redraw
+        // Invalidate buttons to force redraw (mặc dù handleClickEvent thường đã gọi sẵn)
         pvp.invalidate();
         pve_easy.invalidate();
         pve_medium.invalidate();

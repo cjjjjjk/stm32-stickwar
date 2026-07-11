@@ -98,6 +98,7 @@ const osMessageQueueAttr_t Queue1_Attributes ={
 		.name="Queue1"
 };
 ADC_HandleTypeDef hadc1;
+uint8_t global_pendingMode = 0; // 0: None, 1: PvP, 2: PvE Easy, 3: PvE Medium, 4: PvE Hard, 0xFF: Confirm
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -761,6 +762,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  // Khởi tạo nút B1 (PC13)
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
@@ -1151,6 +1158,12 @@ void StartDefaultTask(void *argument)
   uint8_t last_B_Atk = 0;
   uint32_t press_time_B = 0;
 
+  // ==========================================================
+  // 3. KHAI BÁO BIẾN TRẠNG THÁI NÚT B1 (CHỌN CHẾ ĐỘ)
+  // ==========================================================
+  uint8_t last_B1_State = GPIO_PIN_RESET;
+  uint32_t press_time_B1 = 0;
+
   /* Infinite loop */
   for(;;)
   {
@@ -1306,6 +1319,33 @@ void StartDefaultTask(void *argument)
     	}
 
 	}
+
+    // ==========================================================
+    // XỬ LÝ NÚT B1 (CHỌN CHẾ ĐỘ TRÒ CHƠI) - PC13
+    // ==========================================================
+    uint8_t curr_B1_State = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+    if (curr_B1_State != last_B1_State) {
+        if (curr_B1_State == GPIO_PIN_SET) { // Giả sử nút nhấn tích cực mức CAO
+            press_time_B1 = current_time;
+        } else {
+            uint32_t hold_time = current_time - press_time_B1;
+            if (hold_time > 20) { // Debounce tối thiểu 20ms
+                if (hold_time >= 1000) {
+                    // Nhấn giữ (>= 1000ms): Xác nhận chế độ
+                    global_pendingMode = 0xFF;
+                } else if (hold_time < 500) {
+                    // Nhấn đơn (< 500ms): Cycle qua các chế độ
+                    if (global_pendingMode < 1 || global_pendingMode >= 4) {
+                        global_pendingMode = 1;
+                    } else {
+                        global_pendingMode++;
+                    }
+                }
+            }
+        }
+        last_B1_State = curr_B1_State;
+    }
+
   }
   /* USER CODE END 5 */
 }

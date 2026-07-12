@@ -6,6 +6,12 @@
   <Texts>
     <TextGroup Id="Group1" />
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_3ZO3" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">Round  &lt;1&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_D0W0" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">&lt;1&gt;</Translation>
+      </Text>
       <Text Id="__SingleUse_O831" Alignment="Center" TypographyId="Default">
         <Translation Language="GB">Play Again</Translation>
       </Text>
@@ -27,7 +33,7 @@
     </TextGroup>
   </Texts>
   <Typographies>
-    <Typography Id="Default" Font="verdana.ttf" Size="20" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="Default" Font="verdana.ttf" Size="20" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters="0123456789P: |Round " />
     <Typography Id="Large" Font="verdana.ttf" Size="40" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
     <Typography Id="Small" Font="verdana.ttf" Size="10" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
   </Typographies>

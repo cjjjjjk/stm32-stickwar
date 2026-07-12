@@ -19,6 +19,14 @@ public:
     virtual void setupScreen();
     virtual void handleKeyEvent(uint8_t key);
 
+    /*
+     * Virtual Action Handlers
+     */
+    virtual void onPlayAgainClicked()
+    {
+        // Override and implement this function in Screen3
+    }
+
 protected:
     FrontendApplication& application() {
         return *static_cast<FrontendApplication*>(touchgfx::Application::getInstance());
@@ -34,6 +42,16 @@ protected:
     touchgfx::ButtonWithLabel playagain;
 
 private:
+
+    /*
+     * Callback Declarations
+     */
+    touchgfx::Callback<Screen3ViewBase, const touchgfx::AbstractButton&> buttonCallback;
+
+    /*
+     * Callback Handler Declarations
+     */
+    void buttonCallbackHandler(const touchgfx::AbstractButton& src);
 
 };
 

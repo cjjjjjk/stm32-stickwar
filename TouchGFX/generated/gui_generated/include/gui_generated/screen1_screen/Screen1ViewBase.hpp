@@ -10,6 +10,7 @@
 #include <touchgfx/widgets/Box.hpp>
 #include <gui/containers/StickManA.hpp>
 #include <gui/containers/StickManB.hpp>
+#include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 
 class Screen1ViewBase : public touchgfx::View<Screen1Presenter>
 {
@@ -34,6 +35,16 @@ protected:
     touchgfx::Box StaminaA;
     touchgfx::Box HealthB;
     touchgfx::Box StaminaB;
+    touchgfx::TextAreaWithOneWildcard txtWins;
+    touchgfx::TextAreaWithOneWildcard txtRound;
+
+    /*
+     * Wildcard Buffers
+     */
+    static const uint16_t TXTWINS_SIZE = 20;
+    touchgfx::Unicode::UnicodeChar txtWinsBuffer[TXTWINS_SIZE];
+    static const uint16_t TXTROUND_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar txtRoundBuffer[TXTROUND_SIZE];
 
 private:
 

@@ -6,7 +6,8 @@
 #include <images/BitmapDatabase.hpp>
 #include <texts/TextKeysAndLanguages.hpp>
 
-Screen3ViewBase::Screen3ViewBase()
+Screen3ViewBase::Screen3ViewBase() :
+    buttonCallback(this, &Screen3ViewBase::buttonCallbackHandler)
 {
     __background.setPosition(0, 0, 320, 240);
     __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
@@ -22,12 +23,13 @@ Screen3ViewBase::Screen3ViewBase()
     redwin.setAlpha(0);
     add(redwin);
 
-    home.setXY(40, 53);
+    home.setXY(40, 43);
     home.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_MEDIUM_ROUNDED_NORMAL_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_MEDIUM_ROUNDED_PRESSED_ID));
     home.setLabelText(touchgfx::TypedText(T___SINGLEUSE_GLJJ));
     home.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     home.setLabelColorPressed(touchgfx::Color::getColorFromRGB(255, 255, 255));
     home.setAlpha(150);
+    home.setAction(buttonCallback);
     add(home);
 
     playagain.setXY(40, 139);
@@ -36,6 +38,7 @@ Screen3ViewBase::Screen3ViewBase()
     playagain.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     playagain.setLabelColorPressed(touchgfx::Color::getColorFromRGB(255, 255, 255));
     playagain.setAlpha(150);
+    playagain.setAction(buttonCallback);
     add(playagain);
 }
 
@@ -47,6 +50,24 @@ Screen3ViewBase::~Screen3ViewBase()
 void Screen3ViewBase::setupScreen()
 {
 
+}
+
+void Screen3ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& src)
+{
+    if (&src == &playagain)
+    {
+        //Interaction3
+        //When playagain clicked call virtual function
+        //Call onPlayAgainClicked
+        onPlayAgainClicked();
+    }
+    if (&src == &home)
+    {
+        //Interaction4
+        //When home clicked change screen to Screen2
+        //Go to Screen2 with no screen transition
+        application().gotoScreen2ScreenNoTransition();
+    }
 }
 
 void Screen3ViewBase::handleKeyEvent(uint8_t key)

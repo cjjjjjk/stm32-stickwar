@@ -21,13 +21,33 @@ void Screen3View::setupScreen()
     // 2. Tàng hình 2 nút và khóa cảm ứng
     home.setAlpha(0);
     home.setTouchable(false);
-    home.invalidate();
-
     playagain.setAlpha(0);
     playagain.setTouchable(false);
+
+    // =========================================================
+    // 3. LOGIC BEST OF 3: QUYẾT ĐỊNH NÚT NÀO ĐƯỢC PHÉP XUẤT HIỆN
+    // =========================================================
+    int wA = presenter->getWinsA();
+    int wB = presenter->getWinsB();
+
+    if (wA == 2 || wB == 2) 
+    {
+        // Đã có vô địch -> Bật nút Home, tắt nút Play Again
+        home.setVisible(true);
+        playagain.setVisible(false);
+    } 
+    else 
+    {
+        // Mới xong 1 hiệp, chưa ai đủ 2 win -> Bật Play Again, tắt Home
+        home.setVisible(false);
+        playagain.setVisible(true);
+    }
+
+    // Yêu cầu vẽ lại trạng thái ẩn/hiện
+    home.invalidate();
     playagain.invalidate();
 
-    // 3. Gắn Callback cho nút
+    // 4. Gắn Callback cho nút
     home.setAction(buttonCallback);
     playagain.setAction(buttonCallback);
 
@@ -58,22 +78,31 @@ void Screen3View::handleTickEvent()
             animationStep = 1;
         }
     }
-    // BƯỚC 1: Hiện dần 2 nút tùy chọn
+    // BƯỚC 1: Hiện dần nút (Chỉ hiện nút nào đang được SetVisible(true) ở trên)
     else if (animationStep == 1)
     {
-        int currentAlpha = home.getAlpha();
+        // Lấy alpha của nút đang được hiển thị
+        int currentAlpha = home.isVisible() ? home.getAlpha() : playagain.getAlpha();
 
-        if (currentAlpha < 150) {
+        if (currentAlpha < 150) { // Nút của bạn max trong suốt là 150
             int newAlpha = currentAlpha + 3;
             if (newAlpha > 150) newAlpha = 150;
 
-            home.setAlpha(newAlpha);
-            playagain.setAlpha(newAlpha);
-            home.invalidate();
-            playagain.invalidate();
+            // Fade in nút Home nếu nó đang được chọn hiển thị
+            if (home.isVisible()) {
+                home.setAlpha(newAlpha);
+                home.invalidate();
+            }
+            
+            // Fade in nút Play Again nếu nó đang được chọn hiển thị
+            if (playagain.isVisible()) {
+                playagain.setAlpha(newAlpha);
+                playagain.invalidate();
+            }
         } else {
-            home.setTouchable(true); // Mở khóa cho phép bấm
-            playagain.setTouchable(true);
+            // Mở khóa cảm ứng cho nút tương ứng
+            if (home.isVisible()) home.setTouchable(true);
+            if (playagain.isVisible()) playagain.setTouchable(true);
             animationStep = 2;
         }
     }
@@ -83,45 +112,14 @@ void Screen3View::handleTickEvent()
 void Screen3View::buttonClickHandler(const AbstractButton& src)
 {
     if (&src == &home) {
-        application().gotoScreen2ScreenNoTransition(); // Trở về Menu
+        // Về menu (khi quay lại Screen2, logic setupScreen bên đó sẽ tự gọi ResetGame)
+        application().gotoScreen2ScreenNoTransition(); 
     }
     else if (&src == &playagain) {
-        application().gotoScreen1ScreenNoTransition(); // Chơi lại ván mới
-    }
-}
-void Screen3View::setupScreen()
-{
-    Screen3ViewBase::setupScreen();
-
-    uint8_t wA = presenter->getWinsA();
-    uint8_t wB = presenter->getWinsB();
-
-    // 1. Kiểm tra xem đã có CHAMPION chưa (Có bên nào đạt 2 win)
-    if (wA == 2 || wB == 2)
-    {
-        // Hiển thị CHAMPION
-        if (wA == 2) {
-            Unicode::snprintf(txtResultBuffer, TXTRESULT_SIZE, "P1 CHAMPION!");
-        } else {
-            Unicode::snprintf(txtResultBuffer, TXTRESULT_SIZE, "P2 CHAMPION!");
-        }
+        // CỰC KỲ QUAN TRỌNG: Tăng hiệp (Round) lên trước khi quay lại trận
+        presenter->goToNextRound(); 
         
-        // Ẩn nút Next Round, hiện nút Về Menu
-        btnNextRound.setVisible(false);
-        btnBackMenu.setVisible(true);
+        // Chơi lại ván mới
+        application().gotoScreen1ScreenNoTransition(); 
     }
-    else
-    {
-        // 2. Nếu chưa ai đủ 2 win -> Chuẩn bị đánh round tiếp
-        Unicode::snprintf(txtResultBuffer, TXTRESULT_SIZE, "ROUND WINNER!");
-        
-        // Hiện nút Next Round, Ẩn nút Về Menu
-        btnNextRound.setVisible(true);
-        btnBackMenu.setVisible(false);
-    }
-    
-    // Yêu cầu vẽ lại các widget vừa thay đổi trạng thái
-    btnNextRound.invalidate();
-    btnBackMenu.invalidate();
-    txtResult.invalidate();
 }

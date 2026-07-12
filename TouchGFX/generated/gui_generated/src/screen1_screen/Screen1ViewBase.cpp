@@ -4,6 +4,7 @@
 #include <gui_generated/screen1_screen/Screen1ViewBase.hpp>
 #include <touchgfx/canvas_widget_renderer/CanvasWidgetRenderer.hpp>
 #include <touchgfx/Color.hpp>
+#include <texts/TextKeysAndLanguages.hpp>
 
 Screen1ViewBase::Screen1ViewBase()
 {
@@ -34,6 +35,24 @@ Screen1ViewBase::Screen1ViewBase()
     StaminaB.setPosition(170, 5, 150, 5);
     StaminaB.setColor(touchgfx::Color::getColorFromRGB(0, 255, 0));
     add(StaminaB);
+
+    txtWins.setXY(199, 25);
+    txtWins.setColor(touchgfx::Color::getColorFromRGB(31, 156, 41));
+    txtWins.setLinespacing(0);
+    txtWinsBuffer[0] = 0;
+    txtWins.setWildcard(txtWinsBuffer);
+    txtWins.resizeToCurrentText();
+    txtWins.setTypedText(touchgfx::TypedText(T___SINGLEUSE_D0W0));
+    add(txtWins);
+
+    txtRound.setXY(207, 49);
+    txtRound.setColor(touchgfx::Color::getColorFromRGB(130, 10, 22));
+    txtRound.setLinespacing(0);
+    txtRoundBuffer[0] = 0;
+    txtRound.setWildcard(txtRoundBuffer);
+    txtRound.resizeToCurrentText();
+    txtRound.setTypedText(touchgfx::TypedText(T___SINGLEUSE_3ZO3));
+    add(txtRound);
 }
 
 Screen1ViewBase::~Screen1ViewBase()

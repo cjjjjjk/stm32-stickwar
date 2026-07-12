@@ -6,7 +6,8 @@
 #include <images/BitmapDatabase.hpp>
 #include <texts/TextKeysAndLanguages.hpp>
 
-Screen2ViewBase::Screen2ViewBase()
+Screen2ViewBase::Screen2ViewBase() :
+    buttonCallback(this, &Screen2ViewBase::buttonCallbackHandler)
 {
     __background.setPosition(0, 0, 320, 240);
     __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
@@ -22,6 +23,7 @@ Screen2ViewBase::Screen2ViewBase()
     pvp.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     pvp.setLabelColorPressed(touchgfx::Color::getColorFromRGB(255, 255, 255));
     pvp.setAlpha(120);
+    pvp.setAction(buttonCallback);
     add(pvp);
 
     pve_easy.setXY(40, 70);
@@ -57,6 +59,17 @@ Screen2ViewBase::~Screen2ViewBase()
 void Screen2ViewBase::setupScreen()
 {
 
+}
+
+void Screen2ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& src)
+{
+    if (&src == &pvp)
+    {
+        //Interaction2
+        //When pvp clicked change screen to Screen1
+        //Go to Screen1 with no screen transition
+        application().gotoScreen1ScreenNoTransition();
+    }
 }
 
 void Screen2ViewBase::handleKeyEvent(uint8_t key)

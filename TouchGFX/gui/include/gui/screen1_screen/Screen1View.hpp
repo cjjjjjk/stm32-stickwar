@@ -19,6 +19,7 @@ protected:
         uint8_t botActionStep;
         bool isPvE; // Cờ đánh dấu đang chơi với Máy
         int botDifficulty;
+        bool isRoundOver;
 };
 
 #endif // SCREEN1VIEW_HPP

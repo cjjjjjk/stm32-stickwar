@@ -60,6 +60,47 @@
             "Color": {
               "Green": 255
             }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "txtWins",
+            "X": 199,
+            "Y": 25,
+            "Width": 86,
+            "Height": 24,
+            "TextId": "__SingleUse_D0W0",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 31,
+              "Green": 156,
+              "Blue": 41
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "UseBuffer": true,
+              "BufferSize": 20
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "txtRound",
+            "X": 207,
+            "Y": 49,
+            "Width": 78,
+            "Height": 24,
+            "LockPosition": true,
+            "TextId": "__SingleUse_3ZO3",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 130,
+              "Green": 10,
+              "Blue": 22
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "UseBuffer": true,
+              "BufferSize": 10
+            }
           }
         ],
         "Interactions": [
@@ -196,6 +237,18 @@
               "ScreenTransitionType": "ScreenTransitionNone",
               "ActionComponent": "Screen1"
             }
+          },
+          {
+            "InteractionName": "Interaction2",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "pvp"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionNone",
+              "ActionComponent": "Screen1"
+            }
           }
         ]
       },
@@ -222,7 +275,7 @@
             "Type": "ButtonWithLabel",
             "Name": "home",
             "X": 40,
-            "Y": 53,
+            "Y": 43,
             "Width": 240,
             "Height": 50,
             "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_50_medium_rounded_pressed.png",
@@ -290,6 +343,29 @@
               "Type": "ActionGotoScreen",
               "ScreenTransitionType": "ScreenTransitionNone",
               "ActionComponent": "Screen1"
+            }
+          },
+          {
+            "InteractionName": "Interaction3",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "playagain"
+            },
+            "Action": {
+              "Type": "ActionCustom",
+              "FunctionName": "onPlayAgainClicked"
+            }
+          },
+          {
+            "InteractionName": "Interaction4",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "home"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionNone",
+              "ActionComponent": "Screen2"
             }
           }
         ]

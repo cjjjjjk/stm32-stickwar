@@ -7,6 +7,11 @@ Screen2Presenter::Screen2Presenter(Screen2View& v)
 
 }
 
+void Screen2View::setupScreen()
+{
+    Screen2ViewBase::setupScreen();
+    presenter->resetGameMatch(); // Reset wins và round về 0 và 1
+}
 void Screen2Presenter::activate()
 {
 

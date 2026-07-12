@@ -26,6 +26,14 @@ public:
     virtual void deactivate();
 
     virtual ~Screen1Presenter() {}
+    // Lấy dữ liệu từ Model
+    int getWinsA() { return model->getWinsA(); }
+    int getWinsB() { return model->getWinsB(); }
+    int getCurrentRound() { return model->getCurrentRound(); }
+
+    // Cập nhật lên Model khi có người thắng round
+    void playerAWonRound() { model->increaseWinA(); }
+    void playerBWonRound() { model->increaseWinB(); }
 
 private:
     Screen1Presenter();

@@ -89,3 +89,39 @@ void Screen3View::buttonClickHandler(const AbstractButton& src)
         application().gotoScreen1ScreenNoTransition(); // Chơi lại ván mới
     }
 }
+void Screen3View::setupScreen()
+{
+    Screen3ViewBase::setupScreen();
+
+    uint8_t wA = presenter->getWinsA();
+    uint8_t wB = presenter->getWinsB();
+
+    // 1. Kiểm tra xem đã có CHAMPION chưa (Có bên nào đạt 2 win)
+    if (wA == 2 || wB == 2)
+    {
+        // Hiển thị CHAMPION
+        if (wA == 2) {
+            Unicode::snprintf(txtResultBuffer, TXTRESULT_SIZE, "P1 CHAMPION!");
+        } else {
+            Unicode::snprintf(txtResultBuffer, TXTRESULT_SIZE, "P2 CHAMPION!");
+        }
+        
+        // Ẩn nút Next Round, hiện nút Về Menu
+        btnNextRound.setVisible(false);
+        btnBackMenu.setVisible(true);
+    }
+    else
+    {
+        // 2. Nếu chưa ai đủ 2 win -> Chuẩn bị đánh round tiếp
+        Unicode::snprintf(txtResultBuffer, TXTRESULT_SIZE, "ROUND WINNER!");
+        
+        // Hiện nút Next Round, Ẩn nút Về Menu
+        btnNextRound.setVisible(true);
+        btnBackMenu.setVisible(false);
+    }
+    
+    // Yêu cầu vẽ lại các widget vừa thay đổi trạng thái
+    btnNextRound.invalidate();
+    btnBackMenu.invalidate();
+    txtResult.invalidate();
+}

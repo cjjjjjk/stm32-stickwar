@@ -266,3 +266,39 @@ void Screen1View::handleTickEvent()
         invalidate();
     }
 
+/*3.1. Cập nhật UI (Trên TouchGFX Designer)
+
+Thêm các TextArea có sử dụng Wildcard để hiển thị text dạng: P1: <winA> | P2: <winB> và Round <R>.
+
+Generate Code để lưu giao diện.*/
+    void Screen1View::setupScreen()
+{
+    Screen1ViewBase::setupScreen();
+    
+    // Cập nhật số liệu hiển thị lên màn hình (giả sử tên buffer wildcard của bạn là txtWinsBuffer)
+    Unicode::snprintf(txtWinsBuffer, TXTWINS_SIZE, "%d | %d", presenter->getWinsA(), presenter->getWinsB());
+    txtWins.invalidate(); // Vẽ lại text
+
+    Unicode::snprintf(txtRoundBuffer, TXTROUND_SIZE, "%d", presenter->getCurrentRound());
+    txtRound.invalidate();
+}
+
+void Screen1View::handleTickEvent()
+{
+    // Logic game hiện tại của bạn...
+
+    // SAU KHI PHÁT HIỆN HẾT HP:
+    if (hpA <= 0 && !isRoundOver)
+    {
+        isRoundOver = true; // Cờ khóa (chặn gọi hàm nhiều lần)
+        presenter->playerBWonRound(); // B thắng round này
+        application().gotoScreen3ScreenNoTransition(); // Chuyển sang Screen3
+    }
+    else if (hpB <= 0 && !isRoundOver)
+    {
+        isRoundOver = true;
+        presenter->playerAWonRound(); // A thắng round này
+        application().gotoScreen3ScreenNoTransition();
+    }
+}
+

@@ -26,6 +26,9 @@ public:
     virtual void deactivate();
 
     virtual ~Screen3Presenter() {}
+    uint8_t getWinsA() { return model->getWinsA(); }
+    uint8_t getWinsB() { return model->getWinsB(); }
+    void goToNextRound() { model->nextRound(); }
 
 private:
     Screen3Presenter();

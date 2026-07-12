@@ -5,4 +5,4 @@ touchgfx_env := ../../../../TouchGFX/4.26.1/env
 # Optional additional compiler flags
 user_cflags := -DUSE_BPP=16
 
-include $(touchgfx_path)/config/gcc/app.mk
+touchgfx_path := ../Middlewares/ST/touchgfx

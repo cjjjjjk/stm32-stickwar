@@ -1,10 +1,27 @@
 #include <gui/screen1_screen/Screen1View.hpp>
 #include "cmsis_os.h"
+#include <touchgfx/Unicode.hpp>
 #include <stdlib.h> // Để dùng hàm abs()
 bool global_isPvE = false;
 int global_botDifficulty = 2;
 int global_winner = 0;
 extern osMessageQueueId_t Queue1Handle;
+
+
+/*
+Nó tương tự như khai báo biến static:
+static const int COUNTDOWN_START_FRAMES = 180;
+Mục đích:
+- Không cho file khác truy cập.
+- Tránh trùng tên biến.
+- Giữ các hằng số chỉ phục vụ cho Screen1View.cpp.
+*/
+
+namespace
+{
+    const int COUNTDOWN_START_FRAMES = 3 * 60;
+    const int COUNTDOWN_FIGHT_FRAMES = 15;
+}
 
 Screen1View::Screen1View()
 {
@@ -27,11 +44,73 @@ void Screen1View::setupScreen()
     // =========================================================
     isPvE = global_isPvE;
     botDifficulty = global_botDifficulty;// độ khó
+
+    countdownTimer = COUNTDOWN_START_FRAMES; // Bắt đầu đếm từ COUNTDOWN_START_FRAMES.
+    fightTimer = 0; // Chưa hiện "FIGHT".
+    inputBlocked = true; // Khóa điều khiển.
+
+    Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "3"); // Hiện số 3 ban đầu
+    countdownLabel.setVisible(true); // Hiện countdownLabel lên màn hình.
+    countdownLabel.invalidate(); // Báo cho TouchGFX: Widget này đã thay đổi, hãy vẽ lại.
 }
 
+void Screen1View::handleKeyEvent(uint8_t key)
+{
+    if (inputBlocked) { // nếu đang chặn phím thì thoát ngay
+        return;
+    }
+
+    Screen1ViewBase::handleKeyEvent(key);
+}
+
+// xử lý mỗi frame
 void Screen1View::handleTickEvent()
 {
-    Screen1ViewBase::handleTickEvent();
+    Screen1ViewBase::handleTickEvent(); // TouchGFX xử lý các hoạt động mặc định.
+    // Nếu input đang khoá, chạy cooldown
+    if (inputBlocked)
+    {
+        uint8_t ignoredCommand = 0; // những comman bỏ qua
+        while (osMessageQueueGetCount(Queue1Handle) > 0)
+        {
+            osMessageQueueGet(Queue1Handle, &ignoredCommand, NULL, 0); // đọc ra khỏi queue
+        }
+
+        if (countdownTimer > 0)
+        {
+            if (countdownTimer > 120) {
+                Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "3"); // ghi chuỗi "3" vào một buffer Unicode dùng trong TouchGFX.
+            } else if (countdownTimer > 60) {
+                Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "2");
+            } else {
+                Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "1");
+            }
+            countdownLabel.invalidate(); // vẽ lại
+
+            countdownTimer--;
+            if (countdownTimer == 0) { // nếu đếm xong 3 giây
+                fightTimer = COUNTDOWN_FIGHT_FRAMES; // giữ text "Fight!" trong COUNTDOWN_FIGHT_FRAMES
+                Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "FIGHT!");
+                countdownLabel.invalidate(); // vẽ lại 
+            }
+
+            invalidate();
+            return;
+        }
+
+        if (fightTimer > 0)
+        {
+            fightTimer--;
+            if (fightTimer == 0) {
+                countdownLabel.setVisible(false); // ẩn countdownLabel
+                countdownLabel.invalidate(); // vẽ lại
+                inputBlocked = false; // mở khoá input
+            }
+
+            invalidate();
+            return;
+        }
+    }
 
     static uint32_t fake_random_counter = 0;
     fake_random_counter++;

@@ -763,10 +763,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  // Khởi tạo nút B1 (PC13)
+  // Khởi tạo nút B1 (PC13) — pull-up nội: nhấn = LOW (active-low)
   GPIO_InitStruct.Pin = GPIO_PIN_13;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
   /* USER CODE END MX_GPIO_Init_2 */
 }
@@ -1326,9 +1326,9 @@ void StartDefaultTask(void *argument)
     uint32_t current_os_tick = osKernelGetTickCount();
     uint8_t curr_B1_State = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
     if (curr_B1_State != last_B1_State) {
-        if (curr_B1_State == GPIO_PIN_SET) { // Giả sử nút nhấn tích cực mức CAO
+        if (curr_B1_State == GPIO_PIN_RESET) { // PC13 active-low: nhấn = LOW
             press_time_B1 = current_os_tick;
-        } else {
+        } else { // nhả = HIGH → tính hold_time
             uint32_t hold_time = current_os_tick - press_time_B1;
             if (hold_time > 20) { // Debounce tối thiểu 20ms
                 if (hold_time >= 1000) {

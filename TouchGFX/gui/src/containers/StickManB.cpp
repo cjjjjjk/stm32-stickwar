@@ -4,8 +4,8 @@
 namespace
 {
     const touchgfx::colortype PLAYER_B_BASE_COLOR = touchgfx::Color::getColorFromRGB(255, 0, 0);
-    const touchgfx::colortype HIT_FLASH_RED = touchgfx::Color::getColorFromRGB(255, 0, 0);
-    const touchgfx::colortype HIT_FLASH_WHITE = touchgfx::Color::getColorFromRGB(255, 255, 255);
+    const touchgfx::colortype HIT_FLASH_ORANGE = touchgfx::Color::getColorFromRGB(255, 165, 0);
+    const touchgfx::colortype HIT_FLASH_WHITE  = touchgfx::Color::getColorFromRGB(255, 255, 255);
 }
 
 StickManB::StickManB()
@@ -122,7 +122,7 @@ void StickManB::tickProcess()
     const bool hitFlashActive = hitFlashTimer > 0;
     // nhấp nháy đỏ/trắng khi hitFlashActive = true
     const touchgfx::colortype activeColor = hitFlashActive
-        ? ((hitFlashTimer % 2 == 0) ? HIT_FLASH_RED : HIT_FLASH_WHITE)
+        ? ((hitFlashTimer % 2 == 0) ? HIT_FLASH_ORANGE : HIT_FLASH_WHITE)
         : PLAYER_B_BASE_COLOR;
 
     HeadBPainter.setColor(activeColor);

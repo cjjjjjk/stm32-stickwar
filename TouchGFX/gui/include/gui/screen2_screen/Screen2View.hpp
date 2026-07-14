@@ -11,7 +11,9 @@ public:
     virtual ~Screen2View() {}
     virtual void setupScreen();
     virtual void tearDownScreen();
+    virtual void handleTickEvent();
 protected:
+    uint8_t current_highlight_mode = 0;
     Callback<Screen2View, const AbstractButton&> buttonCallback;
 	void buttonClickHandler(const AbstractButton& src);
 };

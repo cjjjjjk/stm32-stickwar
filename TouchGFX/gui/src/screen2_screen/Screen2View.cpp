@@ -13,6 +13,11 @@ void Screen2View::setupScreen()
 {
     Screen2ViewBase::setupScreen();
 
+    // ===============================================
+    // THÊM DÒNG NÀY: XÓA SẠCH ĐIỂM SỐ CỦA TRẬN CŨ
+    // ===============================================
+    presenter->resetGameMatch();
+
     // Gắn Callback lắng nghe sự kiện click cho các nút
     pvp.setAction(buttonCallback);
     pve_easy.setAction(buttonCallback);

@@ -26,6 +26,7 @@ public:
     virtual void deactivate();
 
     virtual ~Screen2Presenter() {}
+    void resetGameMatch() { model->resetMatchData(); }
 
 private:
     Screen2Presenter();

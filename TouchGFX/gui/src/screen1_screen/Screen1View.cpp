@@ -1,11 +1,13 @@
 #include <gui/screen1_screen/Screen1View.hpp>
-#include "cmsis_os.h"
+//#include "cmsis_os.h"
 #include <stdlib.h> // Để dùng hàm abs()
-
+extern "C" {
+    #include "cmsis_os.h"
+}
 bool global_isPvE = false;
 int global_botDifficulty = 2;
 int global_winner = 0;
-extern osMessageQueueId_t Queue1Handle;
+extern "C" osMessageQueueId_t Queue1Handle;
 
 Screen1View::Screen1View()
 {

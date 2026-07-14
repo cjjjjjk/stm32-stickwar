@@ -763,11 +763,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  // Khởi tạo nút B1 (PC13) — pull-up nội: nhấn = LOW (active-low)
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  // Khởi tạo nút B1 (PA0) — pull-down ngoại vi trên board: nhấn = HIGH (active-high)
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
@@ -1161,7 +1161,7 @@ void StartDefaultTask(void *argument)
   // ==========================================================
   // 3. KHAI BÁO BIẾN TRẠNG THÁI NÚT B1 (CHỌN CHẾ ĐỘ)
   // ==========================================================
-  uint8_t last_B1_State = GPIO_PIN_RESET;
+  uint8_t last_B1_State = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0); // đọc trạng thái thực tránh trigger giả lúc khởi động
   uint32_t press_time_B1 = 0;
 
   /* Infinite loop */
@@ -1321,14 +1321,14 @@ void StartDefaultTask(void *argument)
 	}
 
     // ==========================================================
-    // XỬ LÝ NÚT B1 (CHỌN CHẾ ĐỘ TRÒ CHƠI) - PC13
+    // XỬ LÝ NÚT B1 (CHỌN CHẾ ĐỘ TRÒ CHƠI) - PA0
     // ==========================================================
     uint32_t current_os_tick = osKernelGetTickCount();
-    uint8_t curr_B1_State = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+    uint8_t curr_B1_State = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
     if (curr_B1_State != last_B1_State) {
-        if (curr_B1_State == GPIO_PIN_RESET) { // PC13 active-low: nhấn = LOW
+        if (curr_B1_State == GPIO_PIN_SET) { // PA0 active-high: nhấn = HIGH
             press_time_B1 = current_os_tick;
-        } else { // nhả = HIGH → tính hold_time
+        } else { // nhả = LOW → tính hold_time
             uint32_t hold_time = current_os_tick - press_time_B1;
             if (hold_time > 20) { // Debounce tối thiểu 20ms
                 if (hold_time >= 1000) {

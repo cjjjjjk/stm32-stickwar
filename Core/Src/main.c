@@ -1180,10 +1180,10 @@ void StartDefaultTask(void *argument)
     uint8_t curr_A_B   = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_5);  // Nút Đỡ
 
     // Quét vùng điện áp Joystick A: xy_val[0] = xA, xy_val[1] = yA
-    if (xy_val[1] < 1000)       current_cmd_A = 'L'; // Kéo trái
-    else if (xy_val[1] > 3000)  current_cmd_A = 'R'; // Đẩy phải
-    else if (xy_val[0] < 1000)  current_cmd_A = 'C'; // Kéo xuống (Cúi)
-    else if (xy_val[0] > 3000)  current_cmd_A = 'J'; // Đẩy lên (Nhảy)
+    if (xy_val[1] > 3000)       current_cmd_A = 'L'; // Đảo chiều: ngưỡng cao = trái
+    else if (xy_val[1] < 1000)  current_cmd_A = 'R'; // Đảo chiều: ngưỡng thấp = phải
+    else if (xy_val[0] > 3000)  current_cmd_A = 'C'; // Đảo chiều: ngưỡng cao = cúi
+    else if (xy_val[0] < 1000)  current_cmd_A = 'J'; // Đảo chiều: ngưỡng thấp = nhảy
     else                        current_cmd_A = 'S'; // Đứng yên
 
     // Quản lý việc gửi lệnh di chuyển định kỳ Phe A (Tần số 50ms chống nghẽn)
@@ -1255,10 +1255,10 @@ void StartDefaultTask(void *argument)
     uint8_t curr_B_B   = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_7);  // Nút Đỡ
 
     // Quét vùng điện áp Joystick B: xy_val[2] = xB, xy_val[3] = yB
-    if (xy_val[3] < 1000)       current_cmd_B = 'l'; // Kéo trái
-    else if (xy_val[3] > 3000)  current_cmd_B = 'r'; // Đẩy phải
-    else if (xy_val[2] < 1000)  current_cmd_B = 'c'; // Kéo xuống (Cúi)
-    else if (xy_val[2] > 3000)  current_cmd_B = 'j'; // Đẩy lên (Nhảy)
+    if (xy_val[3] > 3000)       current_cmd_B = 'l'; // Đảo chiều: ngưỡng cao = trái
+    else if (xy_val[3] < 1000)  current_cmd_B = 'r'; // Đảo chiều: ngưỡng thấp = phải
+    else if (xy_val[2] > 3000)  current_cmd_B = 'c'; // Đảo chiều: ngưỡng cao = cúi
+    else if (xy_val[2] < 1000)  current_cmd_B = 'j'; // Đảo chiều: ngưỡng thấp = nhảy
     else                        current_cmd_B = 's'; // Đứng yên
 
     // Quản lý việc gửi lệnh di chuyển định kỳ Phe B

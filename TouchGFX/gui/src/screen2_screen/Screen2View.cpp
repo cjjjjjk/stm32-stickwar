@@ -14,6 +14,8 @@ void Screen2View::setupScreen()
 {
     Screen2ViewBase::setupScreen();
 
+    global_pendingMode = 0;
+
     // Gắn Callback lắng nghe sự kiện click cho các nút
     pvp.setAction(buttonCallback);
     pve_easy.setAction(buttonCallback);

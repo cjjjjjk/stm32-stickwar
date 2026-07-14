@@ -1,6 +1,6 @@
 #include <gui/screen1_screen/Screen1View.hpp>
 #include "cmsis_os.h"
-#include <touchgfx/Unicode.hpp>
+#include <texts/TextKeysAndLanguages.hpp>
 #include <stdlib.h> // Để dùng hàm abs()
 bool global_isPvE = false;
 int global_botDifficulty = 2;
@@ -49,9 +49,9 @@ void Screen1View::setupScreen()
     fightTimer = 0; // Chưa hiện "FIGHT".
     inputBlocked = true; // Khóa điều khiển.
 
-    Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "3"); // Hiện số 3 ban đầu
-    countdownLabel.setVisible(true); // Hiện countdownLabel lên màn hình.
-    countdownLabel.invalidate(); // Báo cho TouchGFX: Widget này đã thay đổi, hãy vẽ lại.
+    countdownLabel.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ZSL3)); // Hiện số 3 ban đầu
+    countdownLabel.setVisible(true);
+    countdownLabel.invalidate();
 }
 
 void Screen1View::handleKeyEvent(uint8_t key)
@@ -79,19 +79,19 @@ void Screen1View::handleTickEvent()
         if (countdownTimer > 0)
         {
             if (countdownTimer > 120) {
-                Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "3"); // ghi chuỗi "3" vào một buffer Unicode dùng trong TouchGFX.
+                countdownLabel.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ZSL3)); // "3"
             } else if (countdownTimer > 60) {
-                Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "2");
+                countdownLabel.setTypedText(touchgfx::TypedText(T___SINGLEUSE_Q67O)); // "2"
             } else {
-                Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "1");
+                countdownLabel.setTypedText(touchgfx::TypedText(T___SINGLEUSE_COUNTDOWN_1)); // "1"
             }
-            countdownLabel.invalidate(); // vẽ lại
+            countdownLabel.invalidate();
 
             countdownTimer--;
-            if (countdownTimer == 0) { // nếu đếm xong 3 giây
-                fightTimer = COUNTDOWN_FIGHT_FRAMES; // giữ text "Fight!" trong COUNTDOWN_FIGHT_FRAMES
-                Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", "FIGHT!");
-                countdownLabel.invalidate(); // vẽ lại 
+            if (countdownTimer == 0) {
+                fightTimer = COUNTDOWN_FIGHT_FRAMES;
+                countdownLabel.setTypedText(touchgfx::TypedText(T___SINGLEUSE_COUNTDOWN_FIGHT)); // "FIGHT!"
+                countdownLabel.invalidate();
             }
 
             invalidate();

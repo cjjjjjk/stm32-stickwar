@@ -53,6 +53,14 @@ Screen1ViewBase::Screen1ViewBase()
     txtRound.resizeToCurrentText();
     txtRound.setTypedText(touchgfx::TypedText(T___SINGLEUSE_3ZO3));
     add(txtRound);
+
+    countdownLabel.setPosition(67, 35, 186, 41);
+    countdownLabel.setColor(touchgfx::Color::getColorFromRGB(183, 0, 255));
+    countdownLabel.setLinespacing(0);
+    Unicode::snprintf(countdownLabelBuffer, COUNTDOWNLABEL_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_ZSL3).getText());
+    countdownLabel.setWildcard(countdownLabelBuffer);
+    countdownLabel.setTypedText(touchgfx::TypedText(T___SINGLEUSE_Q67O));
+    add(countdownLabel);
 }
 
 Screen1ViewBase::~Screen1ViewBase()

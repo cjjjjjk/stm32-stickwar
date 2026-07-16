@@ -45,6 +45,7 @@ protected:
     bool isJumping;
     uint32_t jumpTimer;
     bool isCrouching;
+    int hitFlashTimer;
 
 };
 

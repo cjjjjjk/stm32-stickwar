@@ -10,6 +10,7 @@ public:
     Screen1View();
     virtual ~Screen1View() {}
     virtual void setupScreen();
+    virtual void handleKeyEvent(uint8_t key);
     virtual void handleTickEvent();
 protected:
     // Các biến AI cho chế độ PvE
@@ -20,6 +21,9 @@ protected:
         bool isPvE; // Cờ đánh dấu đang chơi với Máy
         int botDifficulty;
         bool isRoundOver;
+        int countdownTimer;
+        int fightTimer;
+        bool inputBlocked;
 };
 
 #endif // SCREEN1VIEW_HPP

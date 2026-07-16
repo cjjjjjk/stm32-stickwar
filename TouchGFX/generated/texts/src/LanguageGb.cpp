@@ -12,10 +12,14 @@ TEXT_LOCATION_FLASH_PRAGMA
 KEEP extern const uint32_t indicesGb[] TEXT_LOCATION_FLASH_ATTRIBUTE = {
     22, // T___SINGLEUSE_3ZO3: "Round  <>"
     29, // T___SINGLEUSE_D0W0: "<>"
+    69, // T___SINGLEUSE_ZSL3: "3"
+    67, // T___SINGLEUSE_Q67O: "2"
+    65, // T___SINGLEUSE_COUNTDOWN_1: "1"
+    49, // T___SINGLEUSE_COUNTDOWN_FIGHT: "FIGHT!"
     0,  // T___SINGLEUSE_O831: "Play Again"
-    49, // T___SINGLEUSE_GLJJ: "Home"
+    56, // T___SINGLEUSE_GLJJ: "Home"
     11, // T___SINGLEUSE_IKE3: "PvE_Medium"
     40, // T___SINGLEUSE_TQK5: "PvE_Hard"
     31, // T___SINGLEUSE_KW0I: "PvE_Easy"
-    54  // T___SINGLEUSE_KL4O: "PvP"
+    61  // T___SINGLEUSE_KL4O: "PvP"
 };

@@ -3,6 +3,7 @@
 // Khai báo biến toàn cục để truyền lệnh sang Screen1
 extern bool global_isPvE;
 extern int global_botDifficulty;
+extern uint8_t global_pendingMode;
 
 Screen2View::Screen2View() :
     buttonCallback(this, &Screen2View::buttonClickHandler)
@@ -13,10 +14,8 @@ void Screen2View::setupScreen()
 {
     Screen2ViewBase::setupScreen();
 
-    // ===============================================
-    // THÊM DÒNG NÀY: XÓA SẠCH ĐIỂM SỐ CỦA TRẬN CŨ
-    // ===============================================
     presenter->resetGameMatch();
+    global_pendingMode = 0;
 
     // Gắn Callback lắng nghe sự kiện click cho các nút
     pvp.setAction(buttonCallback);
@@ -51,4 +50,50 @@ void Screen2View::buttonClickHandler(const AbstractButton& src)
 
     // Chuyển sang màn hình chiến đấu
     application().gotoScreen1ScreenNoTransition();
+}
+
+void Screen2View::handleTickEvent()
+{
+    Screen2ViewBase::handleTickEvent();
+
+    if (global_pendingMode == 0xFF) {
+        global_pendingMode = 0;
+
+        if (current_highlight_mode == 1) {
+            global_isPvE = false;
+        } else if (current_highlight_mode == 2) {
+            global_isPvE = true;
+            global_botDifficulty = 1;
+        } else if (current_highlight_mode == 3) {
+            global_isPvE = true;
+            global_botDifficulty = 2;
+        } else if (current_highlight_mode == 4) {
+            global_isPvE = true;
+            global_botDifficulty = 3;
+        } else {
+            global_isPvE = false;
+        }
+
+        application().gotoScreen1ScreenNoTransition();
+    }
+    else if (global_pendingMode != 0 && global_pendingMode != current_highlight_mode && global_pendingMode != 0xFF) {
+        current_highlight_mode = global_pendingMode;
+
+        touchgfx::ClickEvent cancelEvent(touchgfx::ClickEvent::CANCEL, 0, 0);
+        pvp.handleClickEvent(cancelEvent);
+        pve_easy.handleClickEvent(cancelEvent);
+        pve_medium.handleClickEvent(cancelEvent);
+        pve_hard.handleClickEvent(cancelEvent);
+
+        touchgfx::ClickEvent pressEvent(touchgfx::ClickEvent::PRESSED, 0, 0);
+        if (current_highlight_mode == 1) pvp.handleClickEvent(pressEvent);
+        else if (current_highlight_mode == 2) pve_easy.handleClickEvent(pressEvent);
+        else if (current_highlight_mode == 3) pve_medium.handleClickEvent(pressEvent);
+        else if (current_highlight_mode == 4) pve_hard.handleClickEvent(pressEvent);
+
+        pvp.invalidate();
+        pve_easy.invalidate();
+        pve_medium.invalidate();
+        pve_hard.invalidate();
+    }
 }

@@ -37,6 +37,7 @@ protected:
     touchgfx::Box StaminaB;
     touchgfx::TextAreaWithOneWildcard txtWins;
     touchgfx::TextAreaWithOneWildcard txtRound;
+    touchgfx::TextAreaWithOneWildcard countdownLabel;
 
     /*
      * Wildcard Buffers
@@ -45,6 +46,8 @@ protected:
     touchgfx::Unicode::UnicodeChar txtWinsBuffer[TXTWINS_SIZE];
     static const uint16_t TXTROUND_SIZE = 10;
     touchgfx::Unicode::UnicodeChar txtRoundBuffer[TXTROUND_SIZE];
+    static const uint16_t COUNTDOWNLABEL_SIZE = 10;
+    touchgfx::Unicode::UnicodeChar countdownLabelBuffer[COUNTDOWNLABEL_SIZE];
 
 private:
 

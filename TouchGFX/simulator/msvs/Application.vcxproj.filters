@@ -261,16 +261,10 @@
     <ClCompile Include="..\..\generated\simulator\src\video\SoftwareMJPEGDecoder.cpp">
       <Filter>Source Files\generated\simulator\video</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gui\src\containers\StickManA.cpp">
+    <ClCompile Include="..\..\gui\src\containers\StickMan.cpp">
       <Filter>Source Files\gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\generated\gui_generated\src\containers\StickManABase.cpp">
-      <Filter>Source Files\generated\gui_generated\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\gui\src\containers\StickManB.cpp">
-      <Filter>Source Files\gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\generated\gui_generated\src\containers\StickManBBase.cpp">
+    <ClCompile Include="..\..\generated\gui_generated\src\containers\StickManBase.cpp">
       <Filter>Source Files\generated\gui_generated\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gui\src\screen2_screen\Screen2Presenter.cpp">
@@ -742,16 +736,10 @@
     <ClInclude Include="..\..\generated\simulator\include\simulator\video\SoftwareMJPEGDecoder.hpp">
       <Filter>Header Files\generated\simulator\include\simulator\video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gui\include\gui\containers\StickManA.hpp">
+    <ClInclude Include="..\..\gui\include\gui\containers\StickMan.hpp">
       <Filter>Header Files\gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\containers\StickManABase.hpp">
-      <Filter>Header Files\generated\gui_generated\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gui\include\gui\containers\StickManB.hpp">
-      <Filter>Header Files\gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\containers\StickManBBase.hpp">
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\containers\StickManBase.hpp">
       <Filter>Header Files\generated\gui_generated\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gui\include\gui\screen2_screen\Screen2Presenter.hpp">

@@ -2,82 +2,6 @@
   "Application": {
     "Screens": [
       {
-        "Name": "Screen1",
-        "CanvasBufferSize": 4800,
-        "Components": [
-          {
-            "Type": "CustomContainerInstance",
-            "Name": "stickManA1",
-            "Width": 210,
-            "Height": 240,
-            "CustomContainerDefinitionName": "StickManA"
-          },
-          {
-            "Type": "CustomContainerInstance",
-            "Name": "stickManB1",
-            "X": 110,
-            "Width": 210,
-            "Height": 240,
-            "CustomContainerDefinitionName": "StickManB"
-          },
-          {
-            "Type": "Box",
-            "Name": "HealthA",
-            "Width": 150,
-            "Height": 5,
-            "Color": {
-              "Green": 15,
-              "Blue": 255
-            }
-          },
-          {
-            "Type": "Box",
-            "Name": "StaminaA",
-            "Y": 5,
-            "Width": 150,
-            "Height": 5,
-            "Color": {
-              "Green": 255
-            }
-          },
-          {
-            "Type": "Box",
-            "Name": "HealthB",
-            "X": 170,
-            "Width": 150,
-            "Height": 5,
-            "Color": {
-              "Red": 255
-            }
-          },
-          {
-            "Type": "Box",
-            "Name": "StaminaB",
-            "X": 170,
-            "Y": 5,
-            "Width": 150,
-            "Height": 5,
-            "Color": {
-              "Green": 255
-            }
-          }
-        ],
-        "Interactions": [
-          {
-            "InteractionName": "Interaction1",
-            "Trigger": {
-              "Type": "TriggerPhysicalButtonClicked",
-              "ButtonKey": 1
-            },
-            "Action": {
-              "Type": "ActionGotoScreen",
-              "ScreenTransitionType": "ScreenTransitionNone",
-              "ActionComponent": "Screen3"
-            }
-          }
-        ]
-      },
-      {
         "Name": "Screen2",
         "Components": [
           {
@@ -200,6 +124,101 @@
         ]
       },
       {
+        "Name": "Screen1",
+        "CanvasBufferSize": 4800,
+        "Components": [
+          {
+            "Type": "CustomContainerInstance",
+            "Name": "playerA",
+            "Width": 210,
+            "Height": 240,
+            "CustomContainerDefinitionName": "StickMan"
+          },
+          {
+            "Type": "CustomContainerInstance",
+            "Name": "playerB",
+            "X": 110,
+            "Width": 210,
+            "Height": 240,
+            "CustomContainerDefinitionName": "StickMan"
+          },
+          {
+            "Type": "Box",
+            "Name": "HealthA",
+            "Width": 150,
+            "Height": 5,
+            "Color": {
+              "Green": 15,
+              "Blue": 255
+            }
+          },
+          {
+            "Type": "Box",
+            "Name": "StaminaA",
+            "Y": 5,
+            "Width": 150,
+            "Height": 5,
+            "Color": {
+              "Green": 255
+            }
+          },
+          {
+            "Type": "Box",
+            "Name": "HealthB",
+            "X": 170,
+            "Width": 150,
+            "Height": 5,
+            "Color": {
+              "Red": 255
+            }
+          },
+          {
+            "Type": "Box",
+            "Name": "StaminaB",
+            "X": 170,
+            "Y": 5,
+            "Width": 150,
+            "Height": 5,
+            "Color": {
+              "Green": 255
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "countdownLabel",
+            "X": 67,
+            "Y": 35,
+            "Width": 186,
+            "Height": 41,
+            "TextId": "__SingleUse_Q67O",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 183,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_ZSL3",
+              "UseBuffer": true,
+              "BufferSize": 10
+            }
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "Interaction1",
+            "Trigger": {
+              "Type": "TriggerPhysicalButtonClicked",
+              "ButtonKey": 1
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionNone",
+              "ActionComponent": "Screen3"
+            }
+          }
+        ]
+      },
+      {
         "Name": "Screen3",
         "Components": [
           {
@@ -297,7 +316,7 @@
     ],
     "CustomContainerDefinitions": [
       {
-        "Name": "StickManA",
+        "Name": "StickMan",
         "Width": 210,
         "Height": 240,
         "Components": [
@@ -313,7 +332,7 @@
           },
           {
             "Type": "Circle",
-            "Name": "HeadA",
+            "Name": "Head",
             "X": 95,
             "Y": 84,
             "Width": 25,
@@ -330,7 +349,7 @@
           },
           {
             "Type": "Line",
-            "Name": "BodyA",
+            "Name": "Body",
             "X": 95,
             "Y": 99,
             "Width": 25,
@@ -348,7 +367,7 @@
           },
           {
             "Type": "Line",
-            "Name": "Arm1A",
+            "Name": "Arm1",
             "X": 110,
             "Y": 106,
             "Width": 25,
@@ -366,7 +385,7 @@
           },
           {
             "Type": "Line",
-            "Name": "Arm2A",
+            "Name": "Arm2",
             "X": 135,
             "Y": 91,
             "Width": 60,
@@ -384,7 +403,7 @@
           },
           {
             "Type": "Line",
-            "Name": "Leg1A",
+            "Name": "Leg1",
             "X": 110,
             "Y": 126,
             "Width": 45,
@@ -402,7 +421,7 @@
           },
           {
             "Type": "Line",
-            "Name": "Leg2A",
+            "Name": "Leg2",
             "X": 110,
             "Y": 163,
             "Width": 65,
@@ -420,7 +439,7 @@
           },
           {
             "Type": "Line",
-            "Name": "Leg3A",
+            "Name": "Leg3",
             "X": 80,
             "Y": 148,
             "Width": 40,
@@ -438,7 +457,7 @@
           },
           {
             "Type": "Line",
-            "Name": "Leg4A",
+            "Name": "Leg4",
             "X": 40,
             "Y": 120,
             "Width": 65,
@@ -456,7 +475,7 @@
           },
           {
             "Type": "Line",
-            "Name": "Arm3A",
+            "Name": "Arm3",
             "X": 60,
             "Y": 106,
             "Width": 45,
@@ -481,187 +500,6 @@
             "Height": 15,
             "Visible": false,
             "RelativeFilename": "__generated\\icon_theme_images_toggle_star_border_purple500_15_15_000FFF.svg.png"
-          }
-        ],
-        "Interactions": []
-      },
-      {
-        "Name": "StickManB",
-        "X": 110,
-        "Width": 210,
-        "Height": 240,
-        "Components": [
-          {
-            "Type": "Image",
-            "Name": "star2",
-            "X": 83,
-            "Y": 92,
-            "Width": 15,
-            "Height": 15,
-            "Visible": false,
-            "RelativeFilename": "__generated\\icon_theme_images_toggle_star_border_purple500_15_15_FF0000.svg.png"
-          },
-          {
-            "Type": "Circle",
-            "Name": "HeadB",
-            "X": 90,
-            "Y": 84,
-            "Width": 25,
-            "Height": 85,
-            "Color": {
-              "Red": 255
-            },
-            "CenterX": 13.0,
-            "CenterY": 40.0,
-            "Radius": 10.0,
-            "EndAngle": 360.0,
-            "CapPrecision": "Butt"
-          },
-          {
-            "Type": "Line",
-            "Name": "BodyB",
-            "X": 90,
-            "Y": 99,
-            "Width": 25,
-            "Height": 116,
-            "Color": {
-              "Red": 255
-            },
-            "StartX": 13.0,
-            "StartY": 40.0,
-            "EndX": 13.0,
-            "EndY": 90.0,
-            "LineWidth": 5.0,
-            "LineEndingStyle": "Round"
-          },
-          {
-            "Type": "Line",
-            "Name": "Arm1B",
-            "X": 75,
-            "Y": 106,
-            "Width": 25,
-            "Height": 85,
-            "Color": {
-              "Red": 255
-            },
-            "StartX": 20.0,
-            "StartY": 40.0,
-            "EndX": 2.0,
-            "EndY": 50.0,
-            "LineWidth": 3.0,
-            "LineEndingStyle": "Round"
-          },
-          {
-            "Type": "Line",
-            "Name": "Arm2B",
-            "X": 15,
-            "Y": 91,
-            "Width": 60,
-            "Height": 115,
-            "Color": {
-              "Red": 255
-            },
-            "StartX": 58.0,
-            "StartY": 65.0,
-            "EndX": 35.0,
-            "EndY": 30.0,
-            "LineWidth": 3.0,
-            "LineEndingStyle": "Round"
-          },
-          {
-            "Type": "Line",
-            "Name": "Leg1B",
-            "X": 55,
-            "Y": 126,
-            "Width": 45,
-            "Height": 120,
-            "Color": {
-              "Red": 255
-            },
-            "StartX": 40.0,
-            "StartY": 65.0,
-            "EndX": 20.0,
-            "EndY": 88.0,
-            "LineWidth": 3.0,
-            "LineEndingStyle": "Round"
-          },
-          {
-            "Type": "Line",
-            "Name": "Leg2B",
-            "X": 35,
-            "Y": 163,
-            "Width": 65,
-            "Height": 77,
-            "Color": {
-              "Red": 255
-            },
-            "StartX": 40.0,
-            "StartY": 53.0,
-            "EndX": 40.0,
-            "EndY": 80.0,
-            "LineWidth": 3.0,
-            "LineEndingStyle": "Round"
-          },
-          {
-            "Type": "Line",
-            "Name": "Leg3B",
-            "X": 90,
-            "Y": 148,
-            "Width": 40,
-            "Height": 98,
-            "Color": {
-              "Red": 255
-            },
-            "StartX": 15.0,
-            "StartY": 43.0,
-            "EndX": 35.0,
-            "EndY": 66.0,
-            "LineWidth": 3.0,
-            "LineEndingStyle": "Round"
-          },
-          {
-            "Type": "Line",
-            "Name": "Leg4B",
-            "X": 105,
-            "Y": 120,
-            "Width": 65,
-            "Height": 120,
-            "Color": {
-              "Red": 255
-            },
-            "StartX": 20.0,
-            "StartY": 95.0,
-            "EndX": 20.0,
-            "EndY": 122.0,
-            "LineWidth": 3.0,
-            "LineEndingStyle": "Round"
-          },
-          {
-            "Type": "Line",
-            "Name": "Arm3B",
-            "X": 105,
-            "Y": 106,
-            "Width": 45,
-            "Height": 91,
-            "Color": {
-              "Red": 255
-            },
-            "StartX": 40.0,
-            "StartY": 40.0,
-            "EndX": 5.0,
-            "EndY": 40.0,
-            "LineWidth": 3.0,
-            "LineEndingStyle": "Round"
-          },
-          {
-            "Type": "Image",
-            "Name": "star1",
-            "X": 108,
-            "Y": 92,
-            "Width": 15,
-            "Height": 15,
-            "Visible": false,
-            "RelativeFilename": "__generated\\icon_theme_images_toggle_star_border_purple500_15_15_FF0000.svg.png"
           }
         ],
         "Interactions": []

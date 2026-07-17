@@ -98,6 +98,7 @@ const osMessageQueueAttr_t Queue1_Attributes ={
 		.name="Queue1"
 };
 ADC_HandleTypeDef hadc1;
+uint8_t global_pendingMode = 0; // 0: None, 1: PvP, 2: PvE Easy, 3: PvE Medium, 4: PvE Hard, 0xFF: Confirm
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -623,7 +624,7 @@ static void MX_DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA2_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
 
 }
@@ -749,7 +750,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : PD4 PD5 PD6 PD7 */
   GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN; // Thay thế pull-down ngoại vi bị mất
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -761,6 +762,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  // Khởi tạo nút B1 (PA0) — pull-down ngoại vi trên board: nhấn = HIGH (active-high)
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
@@ -1151,6 +1158,12 @@ void StartDefaultTask(void *argument)
   uint8_t last_B_Atk = 0;
   uint32_t press_time_B = 0;
 
+  // ==========================================================
+  // 3. KHAI BÁO BIẾN TRẠNG THÁI NÚT B1 (CHỌN CHẾ ĐỘ)
+  // ==========================================================
+  uint8_t last_B1_State = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0); // đọc trạng thái thực tránh trigger giả lúc khởi động
+  uint32_t press_time_B1 = 0;
+
   /* Infinite loop */
   for(;;)
   {
@@ -1167,10 +1180,10 @@ void StartDefaultTask(void *argument)
     uint8_t curr_A_B   = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_5);  // Nút Đỡ
 
     // Quét vùng điện áp Joystick A: xy_val[0] = xA, xy_val[1] = yA
-    if (xy_val[1] < 1000)       current_cmd_A = 'L'; // Kéo trái
-    else if (xy_val[1] > 3000)  current_cmd_A = 'R'; // Đẩy phải
-    else if (xy_val[0] < 1000)  current_cmd_A = 'C'; // Kéo xuống (Cúi)
-    else if (xy_val[0] > 3000)  current_cmd_A = 'J'; // Đẩy lên (Nhảy)
+    if (xy_val[1] > 3000)       current_cmd_A = 'L'; // Đảo chiều: ngưỡng cao = trái
+    else if (xy_val[1] < 1000)  current_cmd_A = 'R'; // Đảo chiều: ngưỡng thấp = phải
+    else if (xy_val[0] > 3000)  current_cmd_A = 'C'; // Đảo chiều: ngưỡng cao = cúi
+    else if (xy_val[0] < 1000)  current_cmd_A = 'J'; // Đảo chiều: ngưỡng thấp = nhảy
     else                        current_cmd_A = 'S'; // Đứng yên
 
     // Quản lý việc gửi lệnh di chuyển định kỳ Phe A (Tần số 50ms chống nghẽn)
@@ -1242,10 +1255,10 @@ void StartDefaultTask(void *argument)
     uint8_t curr_B_B   = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_7);  // Nút Đỡ
 
     // Quét vùng điện áp Joystick B: xy_val[2] = xB, xy_val[3] = yB
-    if (xy_val[3] < 1000)       current_cmd_B = 'l'; // Kéo trái
-    else if (xy_val[3] > 3000)  current_cmd_B = 'r'; // Đẩy phải
-    else if (xy_val[2] < 1000)  current_cmd_B = 'c'; // Kéo xuống (Cúi)
-    else if (xy_val[2] > 3000)  current_cmd_B = 'j'; // Đẩy lên (Nhảy)
+    if (xy_val[3] > 3000)       current_cmd_B = 'l'; // Đảo chiều: ngưỡng cao = trái
+    else if (xy_val[3] < 1000)  current_cmd_B = 'r'; // Đảo chiều: ngưỡng thấp = phải
+    else if (xy_val[2] > 3000)  current_cmd_B = 'c'; // Đảo chiều: ngưỡng cao = cúi
+    else if (xy_val[2] < 1000)  current_cmd_B = 'j'; // Đảo chiều: ngưỡng thấp = nhảy
     else                        current_cmd_B = 's'; // Đứng yên
 
     // Quản lý việc gửi lệnh di chuyển định kỳ Phe B
@@ -1306,6 +1319,34 @@ void StartDefaultTask(void *argument)
     	}
 
 	}
+
+    // ==========================================================
+    // XỬ LÝ NÚT B1 (CHỌN CHẾ ĐỘ TRÒ CHƠI) - PA0
+    // ==========================================================
+    uint32_t current_os_tick = osKernelGetTickCount();
+    uint8_t curr_B1_State = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+    if (curr_B1_State != last_B1_State) {
+        if (curr_B1_State == GPIO_PIN_SET) { // PA0 active-high: nhấn = HIGH
+            press_time_B1 = current_os_tick;
+        } else { // nhả = LOW → tính hold_time
+            uint32_t hold_time = current_os_tick - press_time_B1;
+            if (hold_time > 20) { // Debounce tối thiểu 20ms
+                if (hold_time >= 1000) {
+                    // Nhấn giữ (>= 1000ms): Xác nhận chế độ
+                    global_pendingMode = 0xFF;
+                } else if (hold_time < 500) {
+                    // Nhấn đơn (< 500ms): Cycle qua các chế độ
+                    if (global_pendingMode < 1 || global_pendingMode >= 4) {
+                        global_pendingMode = 1;
+                    } else {
+                        global_pendingMode++;
+                    }
+                }
+            }
+        }
+        last_B1_State = curr_B1_State;
+    }
+
   }
   /* USER CODE END 5 */
 }

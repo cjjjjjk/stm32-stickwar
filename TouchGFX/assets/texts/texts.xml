@@ -6,6 +6,18 @@
   <Texts>
     <TextGroup Id="Group1" />
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_ZSL3" Alignment="Center" TypographyId="Large">
+        <Translation Language="GB">3</Translation>
+      </Text>
+      <Text Id="__SingleUse_Q67O" Alignment="Center" TypographyId="Large">
+        <Translation Language="GB">2</Translation>
+      </Text>
+      <Text Id="__SingleUse_COUNTDOWN_1" Alignment="Center" TypographyId="Large">
+        <Translation Language="GB">1</Translation>
+      </Text>
+      <Text Id="__SingleUse_COUNTDOWN_FIGHT" Alignment="Center" TypographyId="Large">
+        <Translation Language="GB">FIGHT!</Translation>
+      </Text>
       <Text Id="__SingleUse_O831" Alignment="Center" TypographyId="Default">
         <Translation Language="GB">Play Again</Translation>
       </Text>

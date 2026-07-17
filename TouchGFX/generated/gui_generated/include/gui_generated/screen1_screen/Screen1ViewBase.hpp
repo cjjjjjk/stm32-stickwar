@@ -8,8 +8,7 @@
 #include <mvp/View.hpp>
 #include <gui/screen1_screen/Screen1Presenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
-#include <gui/containers/StickManA.hpp>
-#include <gui/containers/StickManB.hpp>
+#include <gui/containers/StickMan.hpp>
 #include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 
 class Screen1ViewBase : public touchgfx::View<Screen1Presenter>
@@ -29,8 +28,8 @@ protected:
      * Member Declarations
      */
     touchgfx::Box __background;
-    StickManA stickManA1;
-    StickManB stickManB1;
+    StickMan playerA;
+    StickMan playerB;
     touchgfx::Box HealthA;
     touchgfx::Box StaminaA;
     touchgfx::Box HealthB;

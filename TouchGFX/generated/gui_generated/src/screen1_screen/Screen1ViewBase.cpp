@@ -14,11 +14,11 @@ Screen1ViewBase::Screen1ViewBase()
     __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
     add(__background);
 
-    stickManA1.setXY(0, 0);
-    add(stickManA1);
+    playerA.setXY(0, 0);
+    add(playerA);
 
-    stickManB1.setXY(110, 0);
-    add(stickManB1);
+    playerB.setXY(110, 0);
+    add(playerB);
 
     HealthA.setPosition(0, 0, 150, 5);
     HealthA.setColor(touchgfx::Color::getColorFromRGB(0, 15, 255));
@@ -52,8 +52,8 @@ Screen1ViewBase::~Screen1ViewBase()
 
 void Screen1ViewBase::setupScreen()
 {
-    stickManA1.initialize();
-    stickManB1.initialize();
+    playerA.initialize();
+    playerB.initialize();
 }
 
 void Screen1ViewBase::handleKeyEvent(uint8_t key)

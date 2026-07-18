@@ -9,8 +9,6 @@ desktop.ini
 # IDE
 # =========================
 .settings/
-.project
-.cproject
 *.launch
 RemoteSystemsTempFiles/
 
@@ -41,7 +39,14 @@ TouchGFX/generated/simulator/
 TouchGFX/simulator/build/
 *.touchgfx~
 
-Middlewares/ST/touchgfx/framework/tools/**/build/
+Middlewares/ST/touchgfx/framework/tools/**/build/**
+# Keep the code-generation tools (win/linux/msvs) so collaborators can gencode from .touch files
+!Middlewares/ST/touchgfx/framework/tools/**/build/win/
+!Middlewares/ST/touchgfx/framework/tools/**/build/win/**
+!Middlewares/ST/touchgfx/framework/tools/**/build/linux/
+!Middlewares/ST/touchgfx/framework/tools/**/build/linux/**
+!Middlewares/ST/touchgfx/framework/tools/**/build/msvs/
+!Middlewares/ST/touchgfx/framework/tools/**/build/msvs/**
 Middlewares/ST/touchgfx/lib/sdl2/
 Middlewares/ST/touchgfx/lib/win/
 Middlewares/ST/touchgfx/lib/linux/

@@ -23,6 +23,8 @@ protected:
         int countdownTimer; // Lưu số frame còn lại của thời gian đếm ngược trước khi đánh.
         int fightTimer; // Giữ chữ "FIGHT!" trên màn hình trong một khoảng ngắn.
         bool inputBlocked; // Cờ khóa input.
+        int matchTimer;
+        int tickCounter;
 };
 
 #endif // SCREEN1VIEW_HPP

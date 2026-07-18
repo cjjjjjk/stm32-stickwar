@@ -201,6 +201,27 @@
               "UseBuffer": true,
               "BufferSize": 10
             }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "txtMatchTimer",
+            "X": 262,
+            "Y": 15,
+            "Width": 50,
+            "Height": 41,
+            "TextId": "60",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 128,
+              "Green": 36,
+              "Blue": 36
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_9GFP",
+              "UseBuffer": true,
+              "BufferSize": 4
+            }
           }
         ],
         "Interactions": [

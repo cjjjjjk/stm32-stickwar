@@ -35,12 +35,15 @@ protected:
     touchgfx::Box HealthB;
     touchgfx::Box StaminaB;
     touchgfx::TextAreaWithOneWildcard countdownLabel;
+    touchgfx::TextAreaWithOneWildcard txtMatchTimer;
 
     /*
      * Wildcard Buffers
      */
     static const uint16_t COUNTDOWNLABEL_SIZE = 10;
     touchgfx::Unicode::UnicodeChar countdownLabelBuffer[COUNTDOWNLABEL_SIZE];
+    static const uint16_t TXTMATCHTIMER_SIZE = 4;
+    touchgfx::Unicode::UnicodeChar txtMatchTimerBuffer[TXTMATCHTIMER_SIZE];
 
 private:
 

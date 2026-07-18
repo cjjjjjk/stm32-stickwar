@@ -43,6 +43,15 @@ Screen1ViewBase::Screen1ViewBase()
     countdownLabel.setWildcard(countdownLabelBuffer);
     countdownLabel.setTypedText(touchgfx::TypedText(T___SINGLEUSE_Q67O));
     add(countdownLabel);
+
+    txtMatchTimer.setXY(262, 15);
+    txtMatchTimer.setColor(touchgfx::Color::getColorFromRGB(128, 36, 36));
+    txtMatchTimer.setLinespacing(0);
+    Unicode::snprintf(txtMatchTimerBuffer, TXTMATCHTIMER_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_9GFP).getText());
+    txtMatchTimer.setWildcard(txtMatchTimerBuffer);
+    txtMatchTimer.resizeToCurrentText();
+    txtMatchTimer.setTypedText(touchgfx::TypedText(T_60));
+    add(txtMatchTimer);
 }
 
 Screen1ViewBase::~Screen1ViewBase()

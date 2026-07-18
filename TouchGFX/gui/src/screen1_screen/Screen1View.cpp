@@ -58,6 +58,16 @@ void Screen1View::setupScreen()
     countdownLabel.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ZSL3)); // Hiện số 3 ban đầu
     countdownLabel.setVisible(true);
     countdownLabel.invalidate();
+    // =========================================================
+        // KHỞI TẠO ĐỒNG HỒ ĐẾM NGƯỢC 60 GIÂY
+        // =========================================================
+        matchTimer = 60;
+        tickCounter = 0;
+
+        // Ghi số 60 vào buffer của txtMatchTimer và cập nhật UI
+        Unicode::snprintf(txtMatchTimerBuffer, TXTMATCHTIMER_SIZE, "%d", matchTimer);
+        txtMatchTimer.invalidate();
+
 }
 
 void Screen1View::handleKeyEvent(uint8_t key)
@@ -73,6 +83,7 @@ void Screen1View::handleKeyEvent(uint8_t key)
 void Screen1View::handleTickEvent()
 {
     Screen1ViewBase::handleTickEvent(); // TouchGFX xử lý các hoạt động mặc định.
+
     // Nếu input đang khoá, chạy cooldown
     if (inputBlocked)
     {
@@ -118,6 +129,38 @@ void Screen1View::handleTickEvent()
         }
     }
 
+    // =========================================================================
+    // 0. LOGIC ĐẾM NGƯỢC THỜI GIAN TRẬN ĐẤU (60 Frame = 1 Giây)
+    // =========================================================================
+    tickCounter++;
+    if (tickCounter >= 60)
+    {
+        tickCounter = 0; // Reset bộ đếm frame
+
+        if (matchTimer > 0) {
+            matchTimer--; // Giảm 1 giây
+
+            // Cập nhật lại Text đồng hồ trên UI
+            Unicode::snprintf(txtMatchTimerBuffer, TXTMATCHTIMER_SIZE, "%d", matchTimer);
+            txtMatchTimer.invalidate();
+        }
+
+        // KHI ĐỒNG HỒ VỀ 0: KẾT THÚC TRẬN VÀ SO SÁNH HP
+        if (matchTimer <= 0)
+        {
+            // So sánh HP: Ai nhiều máu hơn thì thắng. Trùng máu -> Xanh (1) thắng.
+            if (playerA.getHp() >= playerB.getHp()) {
+                global_winner = 1;
+            } else {
+                global_winner = 2;
+            }
+
+            // Chuyển sang màn hình kết quả và thoát vòng lặp ngay lập tức
+            application().gotoScreen3ScreenNoTransition();
+            return;
+        }
+    }
+
     static uint32_t fake_random_counter = 0;
     fake_random_counter++;
 
@@ -156,200 +199,200 @@ void Screen1View::handleTickEvent()
     bool jumpB = playerB.getIsJumping();
 
     // =========================================================================
-        // 4. LOGIC AI (BOT) PVE
-        // =========================================================================
-
-        if (isPvE && stateB != STATE_DEAD && stateB != STATE_STUNNED)
-        {
-            // ---------------------------------------------------------------------
-            // 4.1 XỬ LÝ RIÊNG KHI BOT ĐANG GỒNG ULTIMATE
-            // ---------------------------------------------------------------------
-            if (stateB == STATE_ULTIMATE_CHARGE) {
-                botActionTimer++;
-                // Vận nội công đủ 20 frame cho tay to ra rồi mới đâm
-                if (botActionTimer >= 20) {
-                    playerB.processCommand('U'); // Gửi lệnh nhả nút -> Lao tới!
-                    botActionTimer = 0;
-                }
-            }
-            // ---------------------------------------------------------------------
-            // 4.2 LOGIC BÌNH THƯỜNG KHI KHÔNG GỒNG CHIÊU
-            // ---------------------------------------------------------------------
-            else {
-                if (stateA == STATE_BLOCKING) playerBlockTimer++;
-                else playerBlockTimer = 0;
-
-                botMoveTimer++;
-                botActionTimer++;
-
-                // THIẾT LẬP THÔNG SỐ DỰA TRÊN ĐỘ KHÓ
-                int actionThreshold = 50;       // Độ trễ ra đòn
-                int guardBreakThreshold = 15;   // Khả năng nhẫn nhịn khi thấy bạn thủ
-
-                if (botDifficulty == 1) {        // MỨC DỄ: Đánh chậm, hiền lành
-                    actionThreshold = 80;
-                    guardBreakThreshold = 25;
-                } else if (botDifficulty == 3) { // MỨC KHÓ: Nhanh, khát máu, ép góc
-                    actionThreshold = 30;
-                    guardBreakThreshold = 8;
-                }
-
-                // Di chuyển tiếp cận
-                if (botMoveTimer >= 30) {
-                    if (distance > 110) {
-                        playerB.processCommand('L'); // Lao tới
-                    } else {
-                        if (fake_random_counter % 5 == 0) playerB.processCommand('R'); // Lùi nhử
-                        else playerB.processCommand('S');
-                    }
-                    botMoveTimer = 0;
-                }
-                if (botMoveTimer == 15) playerB.processCommand('S');
-
-                // Tấn công khi vào tầm ngắm
-                if (distance <= 110 && botActionTimer >= actionThreshold && playerB.getStamina() > 20)
-                {
-                    playerB.processCommand('S'); // Dừng lại để đánh
-
-                    if (playerBlockTimer >= guardBreakThreshold) {
-                        playerB.processCommand('H'); // Phá đỡ ngay lập tức!
-                    } else {
-                        // Tư duy dùng Tuyệt chiêu Ultimate (Chỉ áp dụng ở Normal và Hard)
-                        // Nếu Thể lực >= 80 và hên xui (tỷ lệ 1/6) thì tung chiêu cuối
-                        if (botDifficulty >= 2 && playerB.getStamina() >= 80 && (fake_random_counter % 6 == 0)) {
-                            playerB.processCommand('W'); // Bắt đầu gồng
-                            botActionTimer = 0; // Reset đếm giờ để chuyển sang logic 4.1
-                        }
-                        // Đánh thường
-                        else if (distance > 90) {
-                            playerB.processCommand('K'); // Đá xa
-                        } else {
-                            // Xúc xắc 6 mặt, mở rộng thêm hành động Cúi Né ('C')
-                            int randomMove = fake_random_counter % 6;
-                            if (randomMove == 0) playerB.processCommand('A'); // Đấm nhẹ
-                            else if (randomMove == 1) playerB.processCommand('H'); // Đấm mạnh
-                            else if (randomMove == 2) playerB.processCommand('K'); // Đá
-                            else if (randomMove == 3) playerB.processCommand('J'); // Nhảy né
-                            else if (randomMove == 4) playerB.processCommand('B'); // Thủ
-                            else playerB.processCommand('C'); // Cúi né
-                        }
-                    }
-                    botActionTimer = 0;
-                    playerBlockTimer = 0;
-                }
-            }
-        }
-
+    // 4. LOGIC AI (BOT) PVE
     // =========================================================================
-        // 5. XÉT VA CHẠM (HITBOX) VÀ TRỪ MÁU
-        // =========================================================================
-
-        // --- PHE A TẤN CÔNG PHE B ---
-        if (stateA == STATE_ATTACK_L || stateA == STATE_ATTACK_H || stateA == STATE_KICK_L || stateA == STATE_KICK_H || stateA == STATE_ULTIMATE_DASH)
-        {
-            int hitFrame = (stateA == STATE_ATTACK_H || stateA == STATE_KICK_H) ? 10 : 5;
-            int attackRange = 90;
-            if (stateA == STATE_KICK_L || stateA == STATE_KICK_H) attackRange = 115;
-            if (stateA == STATE_ULTIMATE_DASH) attackRange = 160;
-
-            if (playerA.getStateTimer() == hitFrame && distance <= attackRange)
-            {
-                bool isDodged = false;
-                // Cúi né đấm
-                if ((stateA == STATE_ATTACK_L || stateA == STATE_ATTACK_H) && crouchB && !jumpB) isDodged = true;
-                // Nhảy né đá
-                if ((stateA == STATE_KICK_L || stateA == STATE_KICK_H) && jumpB) isDodged = true;
-
-                if (!isDodged) {
-                    if (stateB == STATE_BLOCKING && stateA != STATE_ULTIMATE_DASH) {
-                        // Đỡ thành công -> Trừ máu chip cực nhỏ, KHÔNG CHOÁNG
-                        int chipDmg = (stateA == STATE_ATTACK_H || stateA == STATE_KICK_H) ? 2 : 0;
-                        if (chipDmg > 0) playerB.takeDamage(chipDmg, false);
-                    } else {
-                        // TRÚNG ĐÒN (sát thương đã gấp đôi để trận đấu nhanh hơn)
-                        int dmg = 4; // Đòn nhẹ (Trừ 4 máu)
-                        if (stateA == STATE_ATTACK_H || stateA == STATE_KICK_H) dmg = 10; // Đòn mạnh (Trừ 10 máu)
-                        if (stateA == STATE_ULTIMATE_DASH) dmg = 30; // Ultimate (Trừ 30 máu)
-
-                        // Chí mạng: Cộng thêm 4 sát thương
-                        if (fake_random_counter % 5 == 0 && stateA != STATE_ULTIMATE_DASH) dmg += 4;
-                        // LOGIC CHOÁNG
-                            bool willStun = false;
-                            // Chỉ cần KHÔNG CÚI, mọi đòn Đấm và Đá (cả nhẹ lẫn mạnh) đều gây choáng
-                            if (!crouchA && (stateA == STATE_ATTACK_L || stateA == STATE_ATTACK_H || stateA == STATE_KICK_L || stateA == STATE_KICK_H)) {
-                                willStun = true;
-                            }
-
-                            playerB.takeDamage(dmg, willStun);
-                    }
-                }
+    if (isPvE && stateB != STATE_DEAD && stateB != STATE_STUNNED)
+    {
+        // ---------------------------------------------------------------------
+        // 4.1 XỬ LÝ RIÊNG KHI BOT ĐANG GỒNG ULTIMATE
+        // ---------------------------------------------------------------------
+        if (stateB == STATE_ULTIMATE_CHARGE) {
+            botActionTimer++;
+            // Vận nội công đủ 20 frame cho tay to ra rồi mới đâm
+            if (botActionTimer >= 20) {
+                playerB.processCommand('U'); // Gửi lệnh nhả nút -> Lao tới!
+                botActionTimer = 0;
             }
         }
+        // ---------------------------------------------------------------------
+        // 4.2 LOGIC BÌNH THƯỜNG KHI KHÔNG GỒNG CHIÊU
+        // ---------------------------------------------------------------------
+        else {
+            if (stateA == STATE_BLOCKING) playerBlockTimer++;
+            else playerBlockTimer = 0;
 
-        // --- PHE B TẤN CÔNG PHE A ---
-        if (stateB == STATE_ATTACK_L || stateB == STATE_ATTACK_H || stateB == STATE_KICK_L || stateB == STATE_KICK_H || stateB == STATE_ULTIMATE_DASH)
-        {
-            int hitFrame = (stateB == STATE_ATTACK_H || stateB == STATE_KICK_H) ? 10 : 5;
-            int attackRange = 90;
-            if (stateB == STATE_KICK_L || stateB == STATE_KICK_H) attackRange = 115;
-            if (stateB == STATE_ULTIMATE_DASH) attackRange = 160;
+            botMoveTimer++;
+            botActionTimer++;
 
-            if (playerB.getStateTimer() == hitFrame && distance <= attackRange)
+            // THIẾT LẬP THÔNG SỐ DỰA TRÊN ĐỘ KHÓ
+            int actionThreshold = 50;       // Độ trễ ra đòn
+            int guardBreakThreshold = 15;   // Khả năng nhẫn nhịn khi thấy bạn thủ
+
+            if (botDifficulty == 1) {        // MỨC DỄ: Đánh chậm, hiền lành
+                actionThreshold = 80;
+                guardBreakThreshold = 25;
+            } else if (botDifficulty == 3) { // MỨC KHÓ: Nhanh, khát máu, ép góc
+                actionThreshold = 30;
+                guardBreakThreshold = 8;
+            }
+
+            // Di chuyển tiếp cận
+            if (botMoveTimer >= 30) {
+                if (distance > 110) {
+                    playerB.processCommand('L'); // Lao tới
+                } else {
+                    if (fake_random_counter % 5 == 0) playerB.processCommand('R'); // Lùi nhử
+                    else playerB.processCommand('S');
+                }
+                botMoveTimer = 0;
+            }
+            if (botMoveTimer == 15) playerB.processCommand('S');
+
+            // Tấn công khi vào tầm ngắm
+            if (distance <= 110 && botActionTimer >= actionThreshold && playerB.getStamina() > 20)
             {
-                bool isDodged = false;
-                if ((stateB == STATE_ATTACK_L || stateB == STATE_ATTACK_H) && crouchA && !jumpA) isDodged = true;
-                if ((stateB == STATE_KICK_L || stateB == STATE_KICK_H) && jumpA) isDodged = true;
+                playerB.processCommand('S'); // Dừng lại để đánh
 
-                if (!isDodged) {
-                    if (stateA == STATE_BLOCKING && stateB != STATE_ULTIMATE_DASH) {
-                        int chipDmg = (stateB == STATE_ATTACK_H || stateB == STATE_KICK_H) ? 2 : 0;
-                        if (chipDmg > 0) playerA.takeDamage(chipDmg, false);
+                if (playerBlockTimer >= guardBreakThreshold) {
+                    playerB.processCommand('H'); // Phá đỡ ngay lập tức!
+                } else {
+                    // Tư duy dùng Tuyệt chiêu Ultimate (Chỉ áp dụng ở Normal và Hard)
+                    // Nếu Thể lực >= 80 và hên xui (tỷ lệ 1/6) thì tung chiêu cuối
+                    if (botDifficulty >= 2 && playerB.getStamina() >= 80 && (fake_random_counter % 6 == 0)) {
+                        playerB.processCommand('W'); // Bắt đầu gồng
+                        botActionTimer = 0; // Reset đếm giờ để chuyển sang logic 4.1
+                    }
+                    // Đánh thường
+                    else if (distance > 90) {
+                        playerB.processCommand('K'); // Đá xa
                     } else {
-                        // Sát thương đã gấp đôi để trận đấu nhanh hơn
-                        int dmg = 4;
-                        if (stateB == STATE_ATTACK_H || stateB == STATE_KICK_H) dmg = 10;
-                        if (stateB == STATE_ULTIMATE_DASH) dmg = 30;
-                        if (fake_random_counter % 5 == 0 && stateB != STATE_ULTIMATE_DASH) dmg += 4;
-
-                        // LOGIC CHOÁNG
-                            bool willStun = false;
-                            if (!crouchB && (stateB == STATE_ATTACK_L || stateB == STATE_ATTACK_H || stateB == STATE_KICK_L || stateB == STATE_KICK_H)) {
-                                willStun = true;
-                            }
-
-                            playerA.takeDamage(dmg, willStun);
+                        // Xúc xắc 6 mặt, mở rộng thêm hành động Cúi Né ('C')
+                        int randomMove = fake_random_counter % 6;
+                        if (randomMove == 0) playerB.processCommand('A'); // Đấm nhẹ
+                        else if (randomMove == 1) playerB.processCommand('H'); // Đấm mạnh
+                        else if (randomMove == 2) playerB.processCommand('K'); // Đá
+                        else if (randomMove == 3) playerB.processCommand('J'); // Nhảy né
+                        else if (randomMove == 4) playerB.processCommand('B'); // Thủ
+                        else playerB.processCommand('C'); // Cúi né
                     }
                 }
+                botActionTimer = 0;
+                playerBlockTimer = 0;
             }
         }
-
-
-    // =========================================================================
-        // 6. CẬP NHẬT GIAO DIỆN (UI) MÁU & THỂ LỰC VÀ RENDER
-        // =========================================================================
-
-        // Ép kiểu toán học để tính chiều dài thanh máu/stamina (Max là 150 pixel)
-        // Phe A
-        HealthA.setWidth((playerA.getHp() * 150) / 100);
-        StaminaA.setWidth((playerA.getStamina() * 150) / 100);
-        HealthA.invalidate();
-        StaminaA.invalidate();
-
-        // Phe B
-        HealthB.setWidth((playerB.getHp() * 150) / 100);
-        StaminaB.setWidth((playerB.getStamina() * 150) / 100);
-        HealthB.invalidate();
-        StaminaB.invalidate();
-        // Đặt khối này ngay trước dòng invalidate() cuối cùng
-            if (playerA.getHp() <= 0) {
-                global_winner = 2; // Đỏ thắng
-                application().gotoScreen3ScreenNoTransition();
-            } else if (playerB.getHp() <= 0) {
-                global_winner = 1; // Xanh thắng
-                application().gotoScreen3ScreenNoTransition();
-            }
-
-        // Lệnh vẽ lại Screen1 (bao gồm cả các Stickman bên trong)
-        invalidate();
     }
+
+    // =========================================================================
+    // 5. XÉT VA CHẠM (HITBOX) VÀ TRỪ MÁU
+    // =========================================================================
+
+    // --- PHE A TẤN CÔNG PHE B ---
+    if (stateA == STATE_ATTACK_L || stateA == STATE_ATTACK_H || stateA == STATE_KICK_L || stateA == STATE_KICK_H || stateA == STATE_ULTIMATE_DASH)
+    {
+        int hitFrame = (stateA == STATE_ATTACK_H || stateA == STATE_KICK_H) ? 10 : 5;
+        int attackRange = 90;
+        if (stateA == STATE_KICK_L || stateA == STATE_KICK_H) attackRange = 115;
+        if (stateA == STATE_ULTIMATE_DASH) attackRange = 160;
+
+        if (playerA.getStateTimer() == hitFrame && distance <= attackRange)
+        {
+            bool isDodged = false;
+            // Cúi né đấm
+            if ((stateA == STATE_ATTACK_L || stateA == STATE_ATTACK_H) && crouchB && !jumpB) isDodged = true;
+            // Nhảy né đá
+            if ((stateA == STATE_KICK_L || stateA == STATE_KICK_H) && jumpB) isDodged = true;
+
+            if (!isDodged) {
+                if (stateB == STATE_BLOCKING && stateA != STATE_ULTIMATE_DASH) {
+                    // Đỡ thành công -> Trừ máu chip cực nhỏ, KHÔNG CHOÁNG
+                    int chipDmg = (stateA == STATE_ATTACK_H || stateA == STATE_KICK_H) ? 2 : 0;
+                    if (chipDmg > 0) playerB.takeDamage(chipDmg, false);
+                } else {
+                    // TRÚNG ĐÒN (sát thương đã gấp đôi để trận đấu nhanh hơn)
+                    int dmg = 4; // Đòn nhẹ (Trừ 4 máu)
+                    if (stateA == STATE_ATTACK_H || stateA == STATE_KICK_H) dmg = 10; // Đòn mạnh (Trừ 10 máu)
+                    if (stateA == STATE_ULTIMATE_DASH) dmg = 30; // Ultimate (Trừ 30 máu)
+
+                    // Chí mạng: Cộng thêm 4 sát thương
+                    if (fake_random_counter % 5 == 0 && stateA != STATE_ULTIMATE_DASH) dmg += 4;
+
+                    // LOGIC CHOÁNG
+                    bool willStun = false;
+                    // Chỉ cần KHÔNG CÚI, mọi đòn Đấm và Đá (cả nhẹ lẫn mạnh) đều gây choáng
+                    if (!crouchA && (stateA == STATE_ATTACK_L || stateA == STATE_ATTACK_H || stateA == STATE_KICK_L || stateA == STATE_KICK_H)) {
+                        willStun = true;
+                    }
+
+                    playerB.takeDamage(dmg, willStun);
+                }
+            }
+        }
+    }
+
+    // --- PHE B TẤN CÔNG PHE A ---
+    if (stateB == STATE_ATTACK_L || stateB == STATE_ATTACK_H || stateB == STATE_KICK_L || stateB == STATE_KICK_H || stateB == STATE_ULTIMATE_DASH)
+    {
+        int hitFrame = (stateB == STATE_ATTACK_H || stateB == STATE_KICK_H) ? 10 : 5;
+        int attackRange = 90;
+        if (stateB == STATE_KICK_L || stateB == STATE_KICK_H) attackRange = 115;
+        if (stateB == STATE_ULTIMATE_DASH) attackRange = 160;
+
+        if (playerB.getStateTimer() == hitFrame && distance <= attackRange)
+        {
+            bool isDodged = false;
+            if ((stateB == STATE_ATTACK_L || stateB == STATE_ATTACK_H) && crouchA && !jumpA) isDodged = true;
+            if ((stateB == STATE_KICK_L || stateB == STATE_KICK_H) && jumpA) isDodged = true;
+
+            if (!isDodged) {
+                if (stateA == STATE_BLOCKING && stateB != STATE_ULTIMATE_DASH) {
+                    int chipDmg = (stateB == STATE_ATTACK_H || stateB == STATE_KICK_H) ? 2 : 0;
+                    if (chipDmg > 0) playerA.takeDamage(chipDmg, false);
+                } else {
+                    // Sát thương đã gấp đôi để trận đấu nhanh hơn
+                    int dmg = 4;
+                    if (stateB == STATE_ATTACK_H || stateB == STATE_KICK_H) dmg = 10;
+                    if (stateB == STATE_ULTIMATE_DASH) dmg = 30;
+                    if (fake_random_counter % 5 == 0 && stateB != STATE_ULTIMATE_DASH) dmg += 4;
+
+                    // LOGIC CHOÁNG
+                    bool willStun = false;
+                    if (!crouchB && (stateB == STATE_ATTACK_L || stateB == STATE_ATTACK_H || stateB == STATE_KICK_L || stateB == STATE_KICK_H)) {
+                        willStun = true;
+                    }
+
+                    playerA.takeDamage(dmg, willStun);
+                }
+            }
+        }
+    }
+
+    // =========================================================================
+    // 6. CẬP NHẬT GIAO DIỆN (UI) MÁU & THỂ LỰC VÀ RENDER
+    // =========================================================================
+
+    // Ép kiểu toán học để tính chiều dài thanh máu/stamina (Max là 150 pixel)
+    // Phe A
+    HealthA.setWidth((playerA.getHp() * 150) / 100);
+    StaminaA.setWidth((playerA.getStamina() * 150) / 100);
+    HealthA.invalidate();
+    StaminaA.invalidate();
+
+    // Phe B
+    HealthB.setWidth((playerB.getHp() * 150) / 100);
+    StaminaB.setWidth((playerB.getStamina() * 150) / 100);
+    HealthB.invalidate();
+    StaminaB.invalidate();
+
+    // Kiểm tra kết thúc trận do hết máu trước khi hết giờ
+    if (playerA.getHp() <= 0) {
+        global_winner = 2; // Đỏ thắng
+        application().gotoScreen3ScreenNoTransition();
+    } else if (playerB.getHp() <= 0) {
+        global_winner = 1; // Xanh thắng
+        application().gotoScreen3ScreenNoTransition();
+    }
+
+    // Lệnh vẽ lại Screen1 (bao gồm cả các Stickman bên trong)
+    invalidate();
+}
 

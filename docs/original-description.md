@@ -1,4 +1,4 @@
-' -2 người que di chuyển trái phải với 2 thao tác cơ bản: đánh cao, đánh thấp và thủ
+ -2 người que di chuyển trái phải với 2 thao tác cơ bản: đánh cao, đánh thấp và thủ
  - Điều khiển bởi 2 joystick: lên xuống trái phải và sw
  - Có mode chơi 1 người, autobot thì dùng thuật toán đơn giản
  - Có thông tin điểm hiển thị ở phía trên

@@ -14,7 +14,7 @@
 4. Màn hình chọn chế độ chơi (Screen2) và màn hình kết quả (Screen3)
 5. Đồng hồ đếm ngược 60 giây, thắng/thua theo HP hoặc hết giờ so HP  
 - Ảnh chụp minh họa:\
-![Kết quả minh họa](images/hardware_overview.png)
+![Kết quả minh họa](images/hardware_overview.jpg)
 
 ## TÁC GIẢ
 

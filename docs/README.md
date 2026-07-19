@@ -403,10 +403,10 @@ void Screen3View::buttonClickHandler(const AbstractButton& src)
 ![Phần cứng tổng quan](images/hardware_overview.png)
 
 **Màn hình chọn chế độ (Screen2)** — chọn PvP / Easy / Medium / Hard bằng cảm ứng hoặc nút B1:\
-![Menu chọn chế độ](images/menu_screen2.png)
+![Menu chọn chế độ](images/menu_screen2.jpg)
 
 **Màn hình trận đấu (Screen1)** — 2 stickman chiến đấu, thanh HP, stamina, đồng hồ 60 giây:\
-![Màn hình gameplay](images/gameplay_screen1.png)
+![Màn hình gameplay](images/gameplay_screen1.jpg)
 
 **Màn hình kết quả (Screen3)** — hiển thị người thắng, nút Play Again:\
-![Màn hình kết quả](images/result_screen3.png)
+![Màn hình kết quả](images/result_screen3.jpg)

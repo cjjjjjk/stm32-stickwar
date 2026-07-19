@@ -400,7 +400,7 @@ void Screen3View::buttonClickHandler(const AbstractButton& src)
 ## KẾT QUẢ
               
 **Phần cứng tổng quan:**\
-![Phần cứng tổng quan](images/hardware_overview.png)
+![Phần cứng tổng quan](images/hardware_overview.jpg)
 
 **Màn hình chọn chế độ (Screen2)** — chọn PvP / Easy / Medium / Hard bằng cảm ứng hoặc nút B1:\
 ![Menu chọn chế độ](images/menu_screen2.jpg)

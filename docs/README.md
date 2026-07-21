@@ -15,6 +15,8 @@
 5. Đồng hồ đếm ngược 60 giây, thắng/thua theo HP hoặc hết giờ so HP  
 - Ảnh chụp minh họa:\
 ![Kết quả minh họa](images/hardware_overview.jpg)
+- Video minh họa: 
+[GG Driver](https://drive.google.com/file/d/103q2OYArlRXq-jrpMIc4HHTStTui_q1-/view?usp=drivesdk)
 
 ## TÁC GIẢ
 

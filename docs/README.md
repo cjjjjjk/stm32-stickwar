@@ -16,7 +16,7 @@
 - Ảnh chụp minh họa:\
 ![Kết quả minh họa](images/hardware_overview.jpg)
 - Video minh họa: 
-[GG Driver](https://drive.google.com/file/d/103q2OYArlRXq-jrpMIc4HHTStTui_q1-/view?usp=drivesdk)
+[Download](https://github.com/cjjjjjk/stm32-stickwar/releases/download/video-demo/20260720_141035.mp4)
 
 ## TÁC GIẢ
 
